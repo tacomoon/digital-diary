@@ -1,1 +1,7 @@
+**/.DS_Store
+
+# IDEA stuff
 .idea/
+
+# NPM stuff
+server/node_modules/

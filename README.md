@@ -1,1 +1,1 @@
-# School Diary
+# Digital Diary
