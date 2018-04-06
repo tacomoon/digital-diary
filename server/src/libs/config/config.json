@@ -1,0 +1,9 @@
+{
+  "development": {
+    "username": "eugene.home",
+    "password": null,
+    "database": "digital-diary",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  }
+}
