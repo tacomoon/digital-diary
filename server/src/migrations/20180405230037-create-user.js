@@ -31,7 +31,7 @@ module.exports = {
             .then(() => queryInterface.addIndex('Users', ['name']))
             .then(() => queryInterface.addIndex('Users', ['phone']));
     },
-    down: (queryInterface, Sequelize) => {
+    down: (queryInterface) => {
         return queryInterface.dropTable('Users', {});
     }
 };

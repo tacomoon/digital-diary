@@ -9,6 +9,10 @@ module.exports = {
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
+            name: {
+                type: Sequelize.STRING,
+                allowNull: false
+            },
             createdAt: {
                 allowNull: false,
                 type: Sequelize.DATE
@@ -17,9 +21,10 @@ module.exports = {
                 allowNull: false,
                 type: Sequelize.DATE
             }
-        }).then(queryInterface.addIndex('Subjects', ['name']));
+        })
+            .then(() => queryInterface.addIndex('Subjects', ['name']));
     },
-    down: (queryInterface, Sequelize) => {
+    down: (queryInterface) => {
         return queryInterface.dropTable('Subjects', null);
     }
 };

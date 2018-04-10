@@ -24,10 +24,18 @@ module.exports = {
                     key: 'id',
                     as: 'UserId'
                 }
+            },
+            subjectId: {
+                type: Sequelize.INTEGER,
+                references: {
+                    model: 'Subjects',
+                    key: 'id',
+                    as: 'SubjectId'
+                }
             }
         });
     },
-    down: (queryInterface, Sequelize) => {
+    down: (queryInterface) => {
         return queryInterface.dropTable('Teachers', {});
     }
 };
