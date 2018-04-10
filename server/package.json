@@ -19,6 +19,7 @@
   "homepage": "https://github.com/slothforge/digital-diary#readme",
   "dependencies": {
     "chance": "^1.0.13",
+    "config": "^1.30.0",
     "express": "^4.16.3",
     "pg": "^7.4.1",
     "pg-hstore": "^2.3.2",

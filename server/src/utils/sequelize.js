@@ -1,16 +1,8 @@
 'use strict';
 
-const path = require('path');
+const Sequelize = require('sequelize');
+const config = require('config');
 
-module.exports = {
-    "config": path.resolve('./config', 'config.json'),
-    "models-path": path.resolve('./models'),
-    "seeders-path": path.resolve('./seeders'),
-    "migrations-path": path.resolve('./migrations')
-};
+const sequelizeConfig = config.get('db.config');
 
-// const env = 'development';
-// const config = require('../config/config.json')[env];
-// const Sequelize = require('sequelize');
-//
-// module.export = new Sequelize(config.database, config.username, config.password, config);
+module.exports = new Sequelize(sequelizeConfig);
