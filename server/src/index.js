@@ -1,9 +1,29 @@
-'use strict';
+'use strict'
 
-const Express = require('express');
+const Express = require('express')
 
-const express = Express();
+const {
+  initializerSequelize,
+  initializerModels,
+  initializerSeed
+} = require('./initializers')
+const config = require('config')
 
-express.get('*', (req, res) => res.send('"Welcome to the very beginning of nothingness"'));
+const main = async () => {
+  const {port} = config.get('express')
 
-express.listen(3000, () => console.log('App listening on port 3000'));
+  const app = new Express()
+
+  await initializerSequelize(app)
+  await initializerModels(app)
+  await initializerSeed(app)
+
+  await new Promise((resolve, reject) => app
+    .listen(port, resolve)
+    .on('error', reject)
+  )
+}
+
+main().catch((err) => {
+  console.log('Uncaught exception', err)
+})

@@ -1,6 +1,6 @@
 'use strict';
 
-const sequelize = require('utils/sequilize');
+const sequelize = require('../utils/sequelize');
 
 const User = require('./user');
 const Subject = require('./subject');
