@@ -1,7 +1,7 @@
 'use strict'
 
 const Chance = require('chance')
-const {User, Teacher, Subject} = require('./models')
+const { User, Teacher, Subject } = require('../models')
 
 const config = require('config')
 const sequelize = require('../utils/sequelize')
@@ -11,84 +11,79 @@ const subjectNames = ['Maths', 'Science', 'Information Technology',
   'Physical Education', 'History', 'Music', 'Art', 'English', 'Geography']
 
 const initializerSeed = async () => {
-  const {teacherSeedCount} = config.get('db.seed')
+  const { teacherSeedCount } = config.get('db.seed')
 
   console.log('Seed -> started')
 
-  // //TODO async/await
-  // await sequelize.transaction(async (transaction) => {
-  //   const subjects = seedSubjects(transaction)
-  //   const teachers = seedTeachers(teacherSeedCount, subjects, transaction)
-  // })
-  //
-  // console.log('Seed -> done')
-  //
-  // function seedSubjects (transaction) {
-  //   const allSubjects = Subject.findAndCountAll()
-  //
-  //   if (allSubjects) {
-  //     console.log('Subjects already exists -> skip seed')
-  //     return allSubjects
-  //   }
-  //
-  //   const subjects = []
-  //   subjectNames.forEach((subjectName) => {
-  //     const subject = Subject.create({
-  //       name: subjectName
-  //     }, {transaction})
-  //
-  //     subject.save({transaction})
-  //     subjects.put(subject)
-  //   })
-  //   return subjects
-  // }
-  //
-  // function seedUsers (seedCount, transaction) {
-  //   const allUsers = User.findAndCountAll()
-  //
-  //   if (allUsers) {
-  //     console.log('Users already exists -> skip seed')
-  //     return allUsers
-  //   }
-  //
-  //   const users = []
-  //   for (let i = 0; i < seedCount; i++) {
-  //     const user = User.create({
-  //       name: chance.name(),
-  //       address: chance.address(),
-  //       phone: chance.phone({country: 'ru', mobile: true})
-  //     }, {transaction})
-  //
-  //     user.save({transaction})
-  //     users.put(user)
-  //   }
-  //   return users
-  // }
-  //
-  // function seedTeachers (seedCount, subjects, transaction) {
-  //   const {allTeachers, count} = Teacher.findAndCountAll()
-  //
-  //   if (count) {
-  //     console.log('Teachers already exists -> skip seed')
-  //     return allTeachers
-  //   }
-  //
-  //   const users = seedUsers(teacherSeedCount, transaction)
-  //   const teachersCount = Math.max(seedCount, users.length)
-  //
-  //   const teachers = []
-  //   for (let i = 0; i < teachersCount; i++) {
-  //     const teacher = Teacher.build({})
-  //     teacher.setUser(users[i])
-  //     teacher.setSubject(Math.floor(Math.random() * subjects.length))
-  //
-  //     teacher.save({transaction})
-  //     teachers.put(teachers)
-  //   }
-  //   return teachers
-  // }
+  const { rows: allSubjects, count: allSubjectsCount } = await Subject.findAndCountAll()
+  const { rows: allUsers, count: allUsersCount } = await User.findAndCountAll()
+  const { rows: allTeachers, count: allTeachersCount } = await Teacher.findAndCountAll()
+
+  await sequelize.transaction(async function (transaction) {
+    const subjects = await seedSubjects(transaction)
+    const teachers = await seedTeachers(teacherSeedCount, subjects, transaction)
+  })
 
   console.log('Seed -> done')
+
+  async function seedSubjects (transaction) {
+    if (allSubjectsCount) {
+      console.log('Subjects already exists -> skip seed')
+      return allSubjects
+    }
+
+    const subjects = []
+    for (let i = 0; i < subjectNames.length; i++) {
+      const subject = await Subject.create({
+        name: subjectNames[i]
+      }, { transaction })
+
+      subjects.push(subject)
+    }
+    return subjects
+  }
+
+  async function seedUsers (seedCount, transaction) {
+    if (allUsersCount) {
+      console.log('Users already exists -> skip seed')
+      return allUsers
+    }
+
+    const users = []
+    for (let i = 0; i < seedCount; i++) {
+      const user = await User.create({
+        name: chance.name(),
+        address: chance.address(),
+        phone: chance.phone({ country: 'us', mobile: true })
+      }, { transaction })
+
+      users.push(user)
+    }
+    return users
+  }
+
+  async function seedTeachers (seedCount, subjects, transaction) {
+    if (allTeachersCount) {
+      console.log('Teachers already exists -> skip seed')
+      return allTeachers
+    }
+
+    const users = await seedUsers(teacherSeedCount, transaction)
+    const teachersCount = Math.max(seedCount, users.length)
+
+    const teachers = []
+    for (let i = 0; i < teachersCount; i++) {
+      const randomSubject = subjects[Math.floor(Math.random() * subjects.length)]
+
+      const teacher = Teacher.build({})
+      teacher.setUser(users[i], { save: false })
+      teacher.setSubject(randomSubject, { save: false })
+
+      await teacher.save({ transaction })
+      teachers.push(teacher)
+    }
+    return teachers
+  }
 }
 
 module.exports = initializerSeed
