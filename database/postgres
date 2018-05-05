@@ -1,0 +1,30 @@
+#!/bin/bash
+cd "$(dirname "$0")"
+
+DOCKER_CONTEXT="../database/"
+
+case ${1} in
+    b | build )
+        VERSION=$(date +'%s')
+        docker build -t diary-db:${VERSION} -f ${DOCKER_CONTEXT}Dockerfile ${DOCKER_CONTEXT}
+        docker tag diary-db:${VERSION} diary-db:latest
+        ;;
+    r | run )
+        docker run -d -p 5432:5432 -v digital-diary:/var/lib/postgresql/data diary-db:latest
+        ;;
+    s | stop )
+        CONTAINER_ID=$(docker ps -q -f=ancestor=diary-db:latest)
+        ! [ -z ${CONTAINER_ID} ] && docker stop ${CONTAINER_ID}
+        ;;
+    clean )
+        docker rm $(docker ps -qa -f ancestor=diary-db) 2> /dev/null
+        docker rmi -f $(docker images -qa diary-db) 2> /dev/null
+        ;;
+    * )
+        echo -e "Basic actions with postgres database container"
+        echo -e "\nCommands:"
+        echo -e "  b, build\tBuild and tag image as latest"
+        echo -e "  r, run\tRun pg database image tagged as latest"
+        echo -e "  s, stop\tStop running pg database container"
+        echo -e "  clean\t\tRemove images and containers"
+esac
