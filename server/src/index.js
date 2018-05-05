@@ -7,10 +7,12 @@ const {
   initializerModels,
   initializerSeed
 } = require('./initializers')
+
+const { server: logger } = require('./utils/logger')
 const config = require('config')
 
 const main = async () => {
-  const {port} = config.get('express')
+  const { port } = config.get('express')
 
   const app = new Express()
 
@@ -25,5 +27,5 @@ const main = async () => {
 }
 
 main().catch((err) => {
-  console.log('Uncaught exception', err)
+  logger.info('Uncaught exception %j', err)
 })

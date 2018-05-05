@@ -2,8 +2,8 @@
 
 module.exports = {
     development: {
-        username: 'eugene.home',
-        password: null,
+        username: 'development',
+        password: 'development',
         database: 'digital-diary',
         host: '127.0.0.1',
         port: 5432,

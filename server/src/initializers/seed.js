@@ -5,6 +5,8 @@ const { User, Teacher, Subject } = require('../models')
 
 const config = require('config')
 const sequelize = require('../utils/sequelize')
+const { server: logger } = require('../utils/logger')
+
 const chance = new Chance()
 
 const subjectNames = ['Maths', 'Science', 'Information Technology',
@@ -13,7 +15,7 @@ const subjectNames = ['Maths', 'Science', 'Information Technology',
 const initializerSeed = async () => {
   const { teacherSeedCount } = config.get('db.seed')
 
-  console.log('Seed -> started')
+  logger.info('Seed -> started')
 
   const { rows: allSubjects, count: allSubjectsCount } = await Subject.findAndCountAll()
   const { rows: allUsers, count: allUsersCount } = await User.findAndCountAll()
@@ -24,11 +26,11 @@ const initializerSeed = async () => {
     const teachers = await seedTeachers(teacherSeedCount, subjects, transaction)
   })
 
-  console.log('Seed -> done')
+  logger.info('Seed -> done')
 
   async function seedSubjects (transaction) {
     if (allSubjectsCount) {
-      console.log('Subjects already exists -> skip seed')
+      logger.info('Subjects already exists -> skip seed')
       return allSubjects
     }
 
@@ -45,7 +47,7 @@ const initializerSeed = async () => {
 
   async function seedUsers (seedCount, transaction) {
     if (allUsersCount) {
-      console.log('Users already exists -> skip seed')
+      logger.info('Users already exists -> skip seed')
       return allUsers
     }
 
@@ -64,7 +66,7 @@ const initializerSeed = async () => {
 
   async function seedTeachers (seedCount, subjects, transaction) {
     if (allTeachersCount) {
-      console.log('Teachers already exists -> skip seed')
+      logger.info('Teachers already exists -> skip seed')
       return allTeachers
     }
 

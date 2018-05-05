@@ -24,6 +24,9 @@
     "pg": "^7.4.1",
     "pg-hstore": "^2.3.2",
     "sequelize": "^4.37.6",
-    "standard": "^11.0.1"
+    "winston": "^3.0.0-rc5"
+  },
+  "devDependencies": {
+    "nodemon": "^1.17.3"
   }
 }
