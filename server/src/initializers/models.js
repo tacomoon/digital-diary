@@ -6,10 +6,10 @@ const { server: logger } = require('../utils/logger')
 const initializerModels = async () => {
   logger.info('Models initialization -> started')
 
-  require('../models');
+  require('../models')
   await sequelize.sync()
 
-  logger.info('Sequelize initialization -> done')
+  logger.info('Models initialization -> done')
 }
 
 module.exports = initializerModels

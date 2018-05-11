@@ -26,6 +26,4 @@ const main = async () => {
   )
 }
 
-main().catch((err) => {
-  logger.info('Uncaught exception %j', err)
-})
+main().catch((err) => logger.error(err))

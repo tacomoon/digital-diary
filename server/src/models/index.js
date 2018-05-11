@@ -1,11 +1,11 @@
-'use strict';
+'use strict'
 
-const User = require('./user');
-const Subject = require('./subject');
-const Teacher = require('./teacher');
+const User = require('./user')
+const Subject = require('./subject')
+const Teacher = require('./teacher')
 
 module.exports = {
-    User,
-    Subject,
-    Teacher
-};
+  User,
+  Subject,
+  Teacher
+}

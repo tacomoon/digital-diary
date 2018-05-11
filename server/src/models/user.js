@@ -5,8 +5,8 @@ const Sequelize = require('sequelize')
 
 const schema = {
   name: { type: Sequelize.STRING, allowNull: false },
-  address: { type: Sequelize.STRING, },
-  phone: { type: Sequelize.STRING, }
+  address: { type: Sequelize.STRING },
+  phone: { type: Sequelize.STRING }
 }
 
 const options = {
