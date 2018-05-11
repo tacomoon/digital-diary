@@ -3,9 +3,11 @@
 const Express = require('express')
 
 const {
-  initializerSequelize,
-  initializerModels,
-  initializerSeed
+  sequelizeInitializer,
+  modelsInitializer,
+  seedInitializer,
+  routesInitializer,
+  middlewareInitializer
 } = require('./initializers')
 
 const { server: logger } = require('./utils/logger')
@@ -16,14 +18,18 @@ const main = async () => {
 
   const app = new Express()
 
-  await initializerSequelize(app)
-  await initializerModels(app)
-  await initializerSeed(app)
+  await sequelizeInitializer()
+  await modelsInitializer()
+  await seedInitializer()
+  await middlewareInitializer(app)
+  await routesInitializer(app)
 
   await new Promise((resolve, reject) => app
     .listen(port, resolve)
     .on('error', reject)
   )
+
+  logger.info(`Sever started: http://localhost:${port}/`)
 }
 
 main().catch((err) => logger.error(err))

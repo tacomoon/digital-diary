@@ -12,7 +12,7 @@ const chance = new Chance()
 const subjectNames = ['Maths', 'Science', 'Information Technology',
   'Physical Education', 'History', 'Music', 'Art', 'English', 'Geography']
 
-const initializerSeed = async () => {
+module.exports = async () => {
   const { teacherSeedCount } = config.get('db.seed')
 
   logger.info('Seed -> started')
@@ -23,7 +23,7 @@ const initializerSeed = async () => {
 
   await sequelize.transaction(async function (transaction) {
     const subjects = await seedSubjects(transaction)
-    const teachers = await seedTeachers(teacherSeedCount, subjects, transaction)
+    await seedTeachers(teacherSeedCount, subjects, transaction)
   })
 
   logger.info('Seed -> done')
@@ -87,5 +87,3 @@ const initializerSeed = async () => {
     return teachers
   }
 }
-
-module.exports = initializerSeed

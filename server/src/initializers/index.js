@@ -1,11 +1,15 @@
 'use strict'
 
-const initializerSequelize = require('./sequelize')
-const initializerModels = require('./models')
-const initializerSeed = require('./seed')
+const sequelizeInitializer = require('./sequelize')
+const modelsInitializer = require('./models')
+const seedInitializer = require('./seed')
+const routesInitializer = require('./routes')
+const middlewareInitializer = require('./middleware')
 
 module.exports = {
-  initializerSequelize,
-  initializerModels,
-  initializerSeed
+  sequelizeInitializer,
+  modelsInitializer,
+  seedInitializer,
+  routesInitializer,
+  middlewareInitializer
 }
