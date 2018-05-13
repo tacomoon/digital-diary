@@ -31,7 +31,7 @@ module.exports = {
       .then(() => queryInterface.addIndex('Users', ['name']))
       .then(() => queryInterface.addIndex('Users', ['phone']))
   },
-  down: (queryInterface) => {
-    return queryInterface.dropTable('Users', {})
-  }
+  down: (queryInterface) => queryInterface.removeIndex('Users', ['phone'])
+    .then(() => queryInterface.removeIndex('Users', ['name']))
+    .then(() => queryInterface.dropTable('Users', {}))
 }

@@ -1,12 +1,15 @@
 'use strict'
 
+const { DataTypes } = require('sequelize')
 const sequelize = require('../utils/sequelize')
-const Sequelize = require('sequelize')
+
+const Student = require('./student')
+const Teacher = require('./teacher')
 
 const schema = {
-  name: { type: Sequelize.STRING, allowNull: false },
-  address: { type: Sequelize.STRING },
-  phone: { type: Sequelize.STRING }
+  name: { type: DataTypes.STRING, allowNull: false },
+  address: { type: DataTypes.STRING },
+  phone: { type: DataTypes.STRING }
 }
 
 const options = {
@@ -17,5 +20,7 @@ const options = {
 }
 
 const User = sequelize.define('User', schema, options)
+User.hasOne(Student)
+User.hasOne(Teacher)
 
 module.exports = User

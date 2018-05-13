@@ -2,7 +2,7 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Subjects', {
+    return queryInterface.createTable('Classes', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -10,8 +10,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       name: {
-        type: Sequelize.STRING,
-        allowNull: false
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
@@ -22,8 +21,8 @@ module.exports = {
         type: Sequelize.DATE
       }
     })
-      .then(() => queryInterface.addIndex('Subjects', ['name']))
+      .then(() => queryInterface.addIndex('Classes', ['name']))
   },
-  down: (queryInterface) => queryInterface.removeIndex('Subjects', ['name'])
-    .then(() => queryInterface.dropTable('Subjects', {}))
+  down: (queryInterface) => queryInterface.removeIndex('Classes', ['name'])
+    .then(() => queryInterface.dropTable('Classes'))
 }
