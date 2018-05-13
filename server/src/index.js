@@ -21,8 +21,8 @@ const main = async () => {
   await sequelizeInitializer()
   await modelsInitializer()
   await seedInitializer()
-  await middlewareInitializer(app)
   await routesInitializer(app)
+  await middlewareInitializer(app)
 
   await new Promise((resolve, reject) => app
     .listen(port, resolve)

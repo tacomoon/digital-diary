@@ -5,7 +5,7 @@ const { format, transports } = require('winston')
 
 const configDefault = {
   express: {
-    port: 8080,
+    port: 8001,
     limit: '10mb'
   },
   api: {
