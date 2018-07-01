@@ -17,7 +17,8 @@ const options = {
 }
 
 const Class = sequelize.define('Class', schema, options)
-Class.belongsTo(Teacher)
-Class.belongsToMany(Student)
+
+Class.hasMany(Student, { foreignKey: 'fk_class' })
+Class.belongsToMany(Teacher, { through: 'TeacherToSubjects', foreignKey: 'fk_class', otherKey: 'fk_teacher' })
 
 module.exports = Class

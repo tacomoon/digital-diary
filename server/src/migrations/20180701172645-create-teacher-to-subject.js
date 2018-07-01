@@ -1,17 +1,20 @@
 'use strict'
-
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Subjects', {
+    return queryInterface.createTable('TeacherToSubjects', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      name: {
+      fk_class: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
+      },
+      fk_teacher: {
+        allowNull: false,
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
@@ -22,10 +25,10 @@ module.exports = {
         type: Sequelize.DATE
       }
     })
-      .then(() => queryInterface.addIndex('Subjects', ['name']))
+      .then(() => queryInterface.addIndex('TeacherToSubjects', ['fk_class', 'fk_teacher']))
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.removeIndex('Subjects', ['name'])
-      .then(() => queryInterface.dropTable('Subjects', {}))
+    return queryInterface.removeIndex('TeacherToSubjects', ['fk_class', 'fk_teacher'])
+      .then(() => queryInterface.dropTable('TeacherToSubjects'))
   }
 }

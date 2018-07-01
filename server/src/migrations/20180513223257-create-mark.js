@@ -24,33 +24,37 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       },
-      SubjectId: {
+      fk_subject: {
+        allowNull: false,
         type: Sequelize.INTEGER,
         references: {
           model: 'Subjects',
           key: 'id',
-          as: 'SubejctId'
+          as: 'fk_subject'
         }
       },
-      StudentId: {
+      fk_student: {
+        allowNull: false,
         type: Sequelize.INTEGER,
         references: {
           model: 'Students',
           key: 'id',
-          as: 'StudentId'
+          as: 'fk_student'
         }
       },
-      TeacherId: {
+      fk_teacher: {
         type: Sequelize.INTEGER,
         references: {
           model: 'Teachers',
           key: 'id',
-          as: 'TeacherId'
+          as: 'fk_teacher'
         }
       }
     })
       .then(() => queryInterface.addIndex('Marks', ['date']))
   },
-  down: (queryInterface) => queryInterface.removeIndex('Marks', ['date'])
-    .then(() => queryInterface.dropTable('Marks'))
+  down: (queryInterface, Sequelize) => {
+    return queryInterface.removeIndex('Marks', ['date'])
+      .then(() => queryInterface.dropTable('Marks'))
+  }
 }

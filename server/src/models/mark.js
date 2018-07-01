@@ -19,8 +19,9 @@ const options = {
 }
 
 const Mark = sequelize.define('Mark', schema, options)
-Mark.belongsTo(Student)
-Mark.belongsTo(Teacher)
-Mark.belongsTo(Subject)
+
+Mark.belongsTo(Student, { foreignKey: 'fk_student' })
+Mark.belongsTo(Teacher, { foreignKey: 'fk_teacher' })
+Mark.belongsTo(Subject, { foreignKey: 'fk_subject' })
 
 module.exports = Mark

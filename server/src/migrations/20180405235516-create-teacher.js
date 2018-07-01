@@ -17,26 +17,28 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       },
-      UserId: {
+      fk_user: {
+        allowNull: false,
         type: Sequelize.INTEGER,
         onDelete: 'CASCADE',
         references: {
           model: 'Users',
           key: 'id',
-          as: 'UserId'
+          as: 'fk_user'
         }
       },
-      SubjectId: {
+      fk_subject: {
+        allowNull: false,
         type: Sequelize.INTEGER,
         references: {
           model: 'Subjects',
           key: 'id',
-          as: 'SubjectId'
+          as: 'fk_subject'
         }
       }
     })
   },
-  down: (queryInterface) => {
+  down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable('Teachers', {})
   }
 }

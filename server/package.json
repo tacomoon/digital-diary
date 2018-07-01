@@ -5,6 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
+    "migrate-status": "node src/utils/migrations db:migrate:status",
     "migrate-up": "node src/utils/migrations db:migrate",
     "migrate-down": "node src/utils/migrations db:migrate:undo",
     "migrate-down-all": "node src/utils/migrations db:migrate:undo:all",

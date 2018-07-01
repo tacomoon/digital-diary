@@ -10,6 +10,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       name: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       createdAt: {
@@ -23,6 +24,8 @@ module.exports = {
     })
       .then(() => queryInterface.addIndex('Classes', ['name']))
   },
-  down: (queryInterface) => queryInterface.removeIndex('Classes', ['name'])
-    .then(() => queryInterface.dropTable('Classes'))
+  down: (queryInterface, Sequelize) => {
+    return queryInterface.removeIndex('Classes', ['name'])
+      .then(() => queryInterface.dropTable('Classes'))
+  }
 }

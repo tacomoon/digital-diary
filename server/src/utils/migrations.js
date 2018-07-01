@@ -13,18 +13,18 @@ const database = config.get('db.config.database')
 
 const command = process.argv[2]
 const script = `sequelize ${command} \
---migrations-path src/migrations/ \
---url '${dialect}://${username}:${password}@${host}:${port}/${database}'`
+  --migrations-path src/migrations/ \
+  --url '${dialect}://${username}:${password}@${host}:${port}/${database}'`
 
 logger.info(`Executing: ${script}\n`.replace(`:${password}`, ':*****'))
 
 const { stdout, stderr } = exec(script)
 
-function foo (method, data) {
+function formatMessage (method, data) {
   const message = data.toString().replace(/(\r\n|\n|\r)/gm, '')
   if (message.length) logger[method](message)
 }
 
-stdout.on('data', data => foo('info', data))
-stderr.on('data', data => foo('error', data))
+stdout.on('data', data => formatMessage('info', data))
+stderr.on('data', data => formatMessage('error', data))
 stderr.on('exit', code => logger.error('Child process exited with code: ' + code))

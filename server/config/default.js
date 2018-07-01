@@ -22,7 +22,8 @@ const configDefault = {
       password: 'development',
       host: 'localhost',
       port: 5432,
-      dialect: 'postgres'
+      dialect: 'postgres',
+      operatorsAliases: false
     }
   },
   logger: {
