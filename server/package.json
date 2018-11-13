@@ -5,11 +5,11 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
-    "migrate-status": "node src/utils/migrations db:migrate:status",
-    "migrate-up": "node src/utils/migrations db:migrate",
-    "migrate-down": "node src/utils/migrations db:migrate:undo",
-    "migrate-down-all": "node src/utils/migrations db:migrate:undo:all",
-    "db": "../database/postgres stop; ../database/postgres run"
+    "migrate-status": "../scripts/migrations.sh status",
+    "migrate-up": "../scripts/migrations.sh up",
+    "migrate-down": "../scripts/migrations.sh  down",
+    "migrate-down-all": "../scripts/migrations.sh  down-all",
+    "database": "../scripts/database.sh run"
   },
   "repository": {
     "type": "git",
