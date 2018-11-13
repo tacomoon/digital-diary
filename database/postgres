@@ -1,24 +1,22 @@
 #!/bin/bash
-cd "$(dirname "$0")"
-
-DOCKER_CONTEXT="../database/"
 
 case ${1} in
     b | build )
         VERSION=$(date +'%s')
-        docker build -t diary-db:${VERSION} -f ${DOCKER_CONTEXT}Dockerfile ${DOCKER_CONTEXT}
-        docker tag diary-db:${VERSION} diary-db:latest
+        DOCKER_CONTEXT="$(dirname "$0")"
+        docker build -t digital-diary-database:${VERSION} -f ${DOCKER_CONTEXT}/Dockerfile ${DOCKER_CONTEXT}
+        docker tag digital-diary-database:${VERSION} digital-diary-database:latest
         ;;
     r | run )
-        docker run -d -p 5432:5432 -v digital-diary:/var/lib/postgresql/data diary-db:latest
+        docker run -d -p 5432:5432 -v digital-diary:/var/lib/postgresql/data digital-diary-database:latest
         ;;
     s | stop )
-        CONTAINER_ID=$(docker ps -q -f=ancestor=diary-db:latest)
+        CONTAINER_ID=$(docker ps -q -f=ancestor=digital-diary-database:latest)
         ! [ -z ${CONTAINER_ID} ] && docker stop ${CONTAINER_ID}
         ;;
     clean )
-        docker rm $(docker ps -qa -f ancestor=diary-db) 2> /dev/null
-        docker rmi -f $(docker images -qa diary-db) 2> /dev/null
+        docker rm $(docker ps -qa -f ancestor=digital-diary-database) 2> /dev/null
+        docker rmi -f $(docker images -qa digital-diary-database) 2> /dev/null
         ;;
     * )
         echo -e "Basic actions with postgres database container"
