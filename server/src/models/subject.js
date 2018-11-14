@@ -7,7 +7,10 @@ const Teacher = require('./teacher')
 const Mark = require('./mark')
 
 const schema = {
-  name: { type: DataTypes.STRING, allowNull: false }
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false
+  }
 }
 
 const options = {

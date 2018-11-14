@@ -7,7 +7,10 @@ const Teacher = require('./teacher')
 const Student = require('./student')
 
 const schema = {
-  name: { type: DataTypes.STRING, allowNull: false }
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false
+  }
 }
 
 const options = {
@@ -19,6 +22,6 @@ const options = {
 const Class = sequelize.define('Class', schema, options)
 
 Class.hasMany(Student, { foreignKey: 'fk_class' })
-Class.belongsToMany(Teacher, { through: 'TeacherToSubjects', foreignKey: 'fk_class', otherKey: 'fk_teacher' })
+Class.belongsToMany(Teacher, { through: 'TeacherToSubjects', foreignKey: 'fk_class' })
 
 module.exports = Class

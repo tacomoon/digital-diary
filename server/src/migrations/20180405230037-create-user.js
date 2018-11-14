@@ -10,13 +10,15 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       name: {
-        type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
+        type: Sequelize.STRING
       },
       address: {
+        allowNull: true,
         type: Sequelize.STRING
       },
       phone: {
+        allowNull: true,
         type: Sequelize.STRING
       },
       createdAt: {

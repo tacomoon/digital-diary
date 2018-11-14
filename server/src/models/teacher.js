@@ -12,6 +12,6 @@ const Teacher = sequelize.define('Teacher', schema)
 
 Teacher.belongsTo(User, { onDelete: 'CASCADE' })
 Teacher.belongsTo(Subject, { foreignKey: 'fk_teacher' })
-Teacher.belongsToMany(Class, { through: 'TeacherToSubjects', foreignKey: 'fk_teacher', otherKey: 'fk_class' })
+Teacher.belongsToMany(Class, { through: 'TeacherToSubjects', foreignKey: 'fk_teacher' })
 
 module.exports = Teacher

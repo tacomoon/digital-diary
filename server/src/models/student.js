@@ -8,10 +8,10 @@ const Mark = require('./mark')
 
 const schema = {}
 
-const Student = sequelize.define('Class', schema)
+const Student = sequelize.define('Student', schema)
 
 Student.belongsTo(User, { onDelete: 'CASCADE' })
 Student.belongsTo(Class, { foreignKey: 'fk_class' })
-Student.hasMany(Mark, { foreignKey: 'fk_student' })
+Student.hasMany(Mark, { foreignKey: 'fk_student', sourceKey: 'id' })
 
 module.exports = Student

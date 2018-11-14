@@ -28,7 +28,7 @@ case ${1} in
 
     b | build )
         VERSION=$(date +'%s')
-        DOCKER_CONTEXT=$(dirname "$0")/../database
+        DOCKER_CONTEXT=$(dirname ${0})/../database
 
         docker build -t digital-diary-database:${VERSION} -f ${DOCKER_CONTEXT}/Dockerfile ${DOCKER_CONTEXT}
         docker tag digital-diary-database:${VERSION} digital-diary-database:latest
@@ -42,10 +42,8 @@ case ${1} in
 
     c | connect )
         check_container_running
-        if [ ${CONTAINER_ID} ]; then
-            echo "Running psql in container $CONTAINER_ID"
-            docker exec -it ${CONTAINER_ID} bash -c "psql -U development -d digital-diary"
-        fi
+        echo "Running psql in container $CONTAINER_ID"
+        docker exec -it ${CONTAINER_ID} bash -c "psql -U development -d digital-diary"
         ;;
 
     s | stop )
@@ -62,11 +60,7 @@ case ${1} in
         ;;
 
     * )
-        if [ $1 ]; then
-            echo "Unknown command: $1"
-        else
-            echo -e "Basic actions with database container"
-        fi
+        if [ $1 ]; then echo "Unknown command: ${1}"; fi
 
         echo -e "\nCommands:"
         echo -e "  b, build\tBuild and tag image as latest"

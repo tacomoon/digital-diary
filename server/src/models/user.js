@@ -4,9 +4,18 @@ const { DataTypes } = require('sequelize')
 const sequelize = require('../utils/sequelize')
 
 const schema = {
-  name: { type: DataTypes.STRING, allowNull: false },
-  address: { type: DataTypes.STRING },
-  phone: { type: DataTypes.STRING }
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  address: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  phone: {
+    type: DataTypes.STRING,
+    allowNull: true
+  }
 }
 
 const options = {
