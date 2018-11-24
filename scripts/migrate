@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-CONTEXT="$(dirname "$0")/../server"
+CONTEXT="$(dirname "$0")/../backend"
 
 function print_help() {
     echo -e "Commands:"
