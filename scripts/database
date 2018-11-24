@@ -1,71 +1,75 @@
 #!/bin/bash
 
+PORT=5432
+IMAGE_NAME='digital-diary-database'
+VOLUME_NAME='digital-diary-postgres-data'
+
 function find_running_container {
-    CONTAINER_ID=$(docker ps -q -f=ancestor=digital-diary-database:latest)
+    CONTAINER_ID=$(docker ps -q -f=ancestor=${IMAGE_NAME}:latest)
 }
 
 function check_container_running {
-    if [ -z ${CONTAINER_ID} ]; then
-        find_running_container
-    fi
+    find_running_container
 
-    if [ -z ${CONTAINER_ID} ]; then
-        echo "Can't find running digital-diary database container"
+    if [[ -z ${CONTAINER_ID} ]]; then
+        echo "Unable to find running image '$IMAGE_NAME:latest'" >&2
         return 1
     fi
 }
 
-function soft_stop_container {
+function stop_running_container {
     find_running_container
 
-    if [ ${CONTAINER_ID} ]; then
-        echo "Stopping running container $CONTAINER_ID"
+    if [[ ${CONTAINER_ID} ]]; then
+        echo "Stopping running '$IMAGE_NAME' container $CONTAINER_ID"
         docker stop ${CONTAINER_ID}
     fi
 }
 
-case ${1} in
+case $1 in
 
     b | build )
         VERSION=$(date +'%s')
-        DOCKER_CONTEXT=$(dirname ${0})/../database
+        DOCKER_CONTEXT=$(dirname $0)/../database
 
-        docker build -t digital-diary-database:${VERSION} -f ${DOCKER_CONTEXT}/Dockerfile ${DOCKER_CONTEXT}
-        docker tag digital-diary-database:${VERSION} digital-diary-database:latest
+        docker build -t ${IMAGE_NAME}:${VERSION} -f ${DOCKER_CONTEXT}/Dockerfile ${DOCKER_CONTEXT}
+        docker tag ${IMAGE_NAME}:${VERSION} ${IMAGE_NAME}:latest
         ;;
 
     r | run )
-        soft_stop_container
-        echo "Running latest digital-diary database container"
-        docker run -d -p 5432:5432 -v digital-diary:/var/lib/postgresql/data digital-diary-database:latest
+        stop_running_container
+
+        echo "Running '$IMAGE_NAME:latest' image with volume '$VOLUME_NAME' on port $PORT"
+        docker run -d -p ${PORT}:5432 -v ${VOLUME_NAME}:/var/lib/postgresql/data ${IMAGE_NAME}:latest
         ;;
 
     c | connect )
         check_container_running
-        echo "Running psql in container $CONTAINER_ID"
-        docker exec -it ${CONTAINER_ID} bash -c "psql -U development -d digital-diary"
+
+        echo "Connecting to database cli in running '$IMAGE_NAME:latest' container $CONTAINER_ID"
+        docker exec -it ${CONTAINER_ID} bash -c "psql -U postgres -d digital_diary"
         ;;
 
     s | stop )
         check_container_running
-        soft_stop_container
+        stop_running_container
         ;;
 
     clean )
-        soft_stop_container
+        stop_running_container
 
         echo "Removing all related images and containers"
-        docker rm $(docker ps -qa -f ancestor=digital-diary-database) 2> /dev/null
-        docker rmi -f $(docker images -qa digital-diary-database) 2> /dev/null
+        docker rm -f $(docker ps -qa -f ancestor=${IMAGE_NAME}) 2> /dev/null
+        docker rmi -f $(docker images -q ${IMAGE_NAME}) 2> /dev/null
         ;;
 
     * )
-        if [ $1 ]; then echo "Unknown command: ${1}"; fi
+        if [[ ${1} ]]; then echo "Unknown command: $1\n"; fi
 
-        echo -e "\nCommands:"
-        echo -e "  b, build\tBuild and tag image as latest"
-        echo -e "  r, run\tRun pg database image tagged as latest"
-        echo -e "  c, connect\tConnect to running container and run psql"
-        echo -e "  s, stop\tStop running pg database container"
-        echo -e "  clean\t\tRemove images and containers"
+        echo -e "Commands:"
+        echo -e "  b, build\tBuild '$IMAGE_NAME' image and tag as latest"
+        echo -e "  r, run\tRun latest '$IMAGE_NAME' image with volume '$VOLUME_NAME' on port $PORT"
+        echo -e "  c, connect\tConnect to database cli in running '$IMAGE_NAME' container"
+        echo -e "  s, stop\tStop running '$IMAGE_NAME' container"
+        echo -e "  clean\t\tRemove '$IMAGE_NAME' images and containers"
 esac

@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+
+CONTEXT="$(dirname "$0")/../server"
+
+function print_help() {
+    echo -e "Commands:"
+    echo -e "  up\t\tApply all migrations"
+    echo -e "  down\t\tUndo last applied migration"
+    echo -e "  status\tShow applied migrations"
+    echo -e "\nDown command options:"
+    echo -e "  -a, --all\tUndo all applied migrations"
+    echo -e "  -n, --number\tUndo number migrations"
+}
+
+case $1 in
+    status )
+        node ${CONTEXT}/src/utils/migrations db:migrate:status
+        ;;
+    up )
+        node ${CONTEXT}/src/utils/migrations db:migrate
+        ;;
+    down )
+        shift
+
+        if [[ -z $1 ]]; then
+            node ${CONTEXT}/src/utils/migrations db:migrate:undo
+            exit 0
+        fi
+
+        case $1 in
+            -a | --all )
+                node ${CONTEXT}/src/utils/migrations db:migrate:undo:all
+                exit 0
+                ;;
+            -n | --number )
+                shift
+                if ! [[ $1 =~ ^[0-9]+$ ]]; then
+                    echo "Number expected, but found: $1" >&2
+                    exit 1
+                fi
+
+                for i in $(seq 1 $1); do
+                    node ${CONTEXT}/src/utils/migrations db:migrate:undo
+                done
+                exit 0
+                ;;
+            * )
+                echo -e "Unknown option: $1\n"
+                print_help
+        esac
+        ;;
+    * )
+        print_help
+esac
