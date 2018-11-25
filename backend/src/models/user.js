@@ -1,30 +1,35 @@
 'use strict'
 
-const { DataTypes } = require('sequelize')
+const { Sequelize } = require('sequelize')
 const sequelize = require('../utils/sequelize')
 
 const schema = {
   name: {
-    type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
+    type: Sequelize.INTEGER,
   },
   address: {
-    type: DataTypes.STRING,
-    allowNull: true
+    allowNull: true,
+    type: Sequelize.STRING,
   },
   phone: {
-    type: DataTypes.STRING,
-    allowNull: true
+    allowNull: true,
+    type: Sequelize.STRING,
   }
 }
 
 const options = {
   indexes: [
-    { fields: ['name'] },
-    { fields: ['phone'] }
+    {
+      name: 'i_user__name',
+      fields: ['name']
+    },
+    {
+      name: 'i_user__name',
+      fields: ['phone']
+    }
   ]
 }
 
-const User = sequelize.define('User', schema, options)
-
-module.exports = User
+module.exports = sequelize
+  .define('user', schema, options)
