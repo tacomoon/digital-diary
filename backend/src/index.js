@@ -10,26 +10,21 @@ const {
   middlewareInitializer
 } = require('./initializers')
 
-const { server: logger } = require('./utils/logger')
+const { console: logger } = require('./utils/logger')
 const config = require('config')
 
-const main = async () => {
+(async () => {
   const { port } = config.get('express')
 
-  const app = new Express()
+  const application = new Express()
 
   await sequelizeInitializer()
-  await modelsInitializer()
-  await seedInitializer()
-  await routesInitializer(app)
-  await middlewareInitializer(app)
+// await modelsInitializer()
+// await seedInitializer()
+// await routesInitializer(application)
+  await middlewareInitializer(application)
 
-  await new Promise((resolve, reject) => app
-    .listen(port, resolve)
-    .on('error', reject)
-  )
-
-  logger.info(`Sever started: http://localhost:${port}/`)
-}
-
-main().catch((err) => logger.error(err))
+  application
+    .listen(port, () => logger.info(`Sever started: http://localhost:${port}/`))
+    .on('error', err => logger.error(err))
+})()

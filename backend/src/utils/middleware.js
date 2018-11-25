@@ -1,9 +1,9 @@
 'use strict'
 
-const { server: logger } = require('./logger')
+const { console: logger } = require('./logger')
 const { AbstractError } = require('../errors')
 
-const errorhandler = require('errorhandler')
+const errorHandler = require('errorhandler')
 const { INTERNAL_SERVER_ERROR } = require('http-status')
 
 function handleError (err, req, res, next) {
@@ -22,7 +22,7 @@ function handleError (err, req, res, next) {
 
   const environment = process.env.NODE_ENV
   if (!environment || environment === 'development') {
-    errorhandler()(err, req, res, next)
+    errorHandler()(err, req, res, next)
   } else {
     handleAbstractError(new AbstractError(INTERNAL_SERVER_ERROR, 'Unexpected error'), res)
   }

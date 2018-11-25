@@ -2,14 +2,14 @@
 
 const config = require('config')
 const { exec } = require('child_process')
-const { server: logger } = require('./logger')
+const { console: logger } = require('./logger')
 
-const dialect = config.get('db.config.dialect')
-const username = config.get('db.config.username')
-const password = config.get('db.config.password')
-const host = config.get('db.config.host')
-const port = config.get('db.config.port')
-const database = config.get('db.config.database')
+const dialect = config.get('database.config.dialect')
+const username = config.get('database.config.username')
+const password = config.get('database.config.password')
+const host = config.get('database.config.host')
+const port = config.get('database.config.port')
+const database = config.get('database.config.database')
 
 const command = process.argv[2]
 const script = `sequelize ${command} \

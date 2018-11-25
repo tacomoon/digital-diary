@@ -3,6 +3,6 @@
 const Sequelize = require('sequelize')
 const config = require('config')
 
-const sequelizeConfig = config.get('db.config')
+const databaseConfig = config.get('database.config')
 
-module.exports = new Sequelize(sequelizeConfig)
+module.exports = new Sequelize(databaseConfig)

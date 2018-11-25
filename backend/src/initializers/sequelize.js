@@ -1,12 +1,15 @@
 'use strict'
 
 const sequelize = require('../utils/sequelize')
-const { server: logger } = require('../utils/logger')
+const { console: logger } = require('../utils/logger')
 
 module.exports = async () => {
-  logger.info('Sequelize initialization -> started')
-
   await sequelize.authenticate()
+    .then(() => {
+      logger.info('Database connection has been established successfully')
+    })
+    .catch(err => {
+      logger.error('Unable to connect to the database', err)
+    })
 
-  logger.info('Sequelize initialization -> done')
 }

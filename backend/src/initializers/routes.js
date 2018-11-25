@@ -3,9 +3,10 @@
 const controllersV1 = require('../controllers/v1')
 
 const config = require('config')
-const { server: logger } = require('../utils/logger')
+const { console: logger } = require('../utils/logger')
 
 const initializerRoutes = (app) => {
+  // TODO [EG]: destructor
   const apiConfig = config.get('api')
   const apiUrl = `/${apiConfig.base}/${apiConfig.version}`
 
@@ -17,7 +18,7 @@ const initializerRoutes = (app) => {
       logger.info(`Routes initialization -> route added: ${apiUrl}/${name}`)
     })
 
-  logger.info('Routes initialization -> done', apiConfig)
+  logger.info('Routes initialized', apiConfig)
 }
 
 module.exports = initializerRoutes

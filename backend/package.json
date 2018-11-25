@@ -1,7 +1,7 @@
 {
   "name": "digital-diary",
   "version": "0.0.1",
-  "description": "AMM JS School 2018 test task",
+  "description": "AMM JS School 2018",
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
@@ -13,14 +13,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/slothforge/digital-diary.git"
+    "url": "git+https://github.com/tacomoon/digital-diary.git"
   },
-  "author": "slothforge",
+  "author": "tacomoon",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/slothforge/digital-diary/issues"
+    "url": "https://github.com/tacomoon/digital-diary/issues"
   },
-  "homepage": "https://github.com/slothforge/digital-diary#readme",
+  "homepage": "https://github.com/tacomoon/digital-diary#readme",
   "dependencies": {
     "body-parser": "^1.18.2",
     "chance": "^1.0.13",
@@ -30,7 +30,7 @@
     "http-status": "^1.1.0",
     "pg": "^7.6.1",
     "pg-hstore": "^2.3.2",
-    "sequelize": "^4.37.6",
+    "sequelize": "^4.41.2",
     "winston": "^3.1.0"
   }
 }

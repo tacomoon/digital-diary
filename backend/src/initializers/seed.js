@@ -5,7 +5,7 @@ const { User, Teacher, Subject } = require('../models')
 
 const config = require('config')
 const sequelize = require('../utils/sequelize')
-const { server: logger } = require('../utils/logger')
+const { console: logger } = require('../utils/logger')
 
 const chance = new Chance()
 
@@ -13,7 +13,7 @@ const subjectNames = ['Maths', 'Science', 'Information Technology',
   'Physical Education', 'History', 'Music', 'Art', 'English', 'Geography']
 
 module.exports = async () => {
-  const { teacherSeedCount } = config.get('db.seed')
+  const { teacherSeedCount } = config.get('database.seed')
 
   logger.info('Seed -> started')
 
