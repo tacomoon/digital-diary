@@ -31,5 +31,7 @@ const options = {
   ]
 }
 
-module.exports = sequelize
+const User = sequelize
   .define('user', schema, options)
+
+module.exports = User

@@ -1,6 +1,6 @@
 'use strict'
 
-const Express = require('express')
+const express = require('express')
 
 const {
   sequelizeInitializer,
@@ -16,10 +16,10 @@ const { port } = config.get('express')
 
 const main = async () => {
 
-  const application = new Express()
+  const application = express()
 
   await sequelizeInitializer()
-// await seedInitializer()
+  await seedInitializer()
 // await routesInitializer(application)
   await middlewareInitializer(application)
 
@@ -29,4 +29,4 @@ const main = async () => {
 }
 
 main()
-  .catch(reason => logger.error(`Failed to start server on port ${port}`, reason))
+  .catch(reason => logger.error(`Failed to start server on port ${port}: ${reason}`))

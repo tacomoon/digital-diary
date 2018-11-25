@@ -3,15 +3,19 @@
 const sequelize = require('../utils/sequelize')
 
 const User = require('./user')
-const Subject = require('./subject')
-const Class = require('./class')
 
-const schema = {}
+const Teacher = sequelize
+  .define('teacher', {})
 
-const Teacher = sequelize.define('Teacher', schema)
 
-Teacher.belongsTo(User, { onDelete: 'CASCADE' })
-Teacher.belongsTo(Subject, { foreignKey: 'fk_teacher' })
-Teacher.belongsToMany(Class, { through: 'TeacherToSubjects', foreignKey: 'fk_teacher' })
+Teacher.belongsTo(
+  User,
+  {
+    as: 'user',
+    foreignKey: 'user_id',
+    onUpdate: 'cascade',
+    onDelete: 'cascade'
+  }
+)
 
 module.exports = Teacher

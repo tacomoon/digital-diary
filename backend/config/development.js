@@ -17,6 +17,10 @@ module.exports = {
     version: 'v1'
   },
   database: {
+    seed: {
+      teachers: 10,
+      students: 10,
+    },
     config: {
       username: 'postgres',
       password: 'mysecretpassword',
