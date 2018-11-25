@@ -20,11 +20,6 @@ logger.info(`Executing: ${script}\n`.replace(`:${password}`, ':*****'))
 
 const { stdout, stderr } = exec(script)
 
-function formatMessage (method, data) {
-  const message = data.toString().replace(/(\r\n|\n|\r)/gm, '')
-  if (message.length) logger[method](message)
-}
-
-stdout.on('data', data => formatMessage('info', data))
-stderr.on('data', data => formatMessage('error', data))
-stderr.on('exit', code => logger.error('Child process exited with code: ' + code))
+stdout.on('data', data => console.log(data))
+stderr.on('data', data => console.log(data))
+stderr.on('exit', code => console.log(`Child process exited with code: ${code}`))
