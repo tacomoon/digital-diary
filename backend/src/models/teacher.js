@@ -7,7 +7,6 @@ const User = require('./user')
 const Teacher = sequelize
   .define('teacher', {})
 
-
 Teacher.belongsTo(
   User,
   {

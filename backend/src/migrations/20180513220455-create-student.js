@@ -2,12 +2,22 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Students', {
+    return queryInterface.createTable('students', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
+      },
+      user_id: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'users',
+          key: 'id',
+        },
+        onUpdate: 'cascade',
+        onDelete: 'cascade',
       },
       createdAt: {
         allowNull: false,
@@ -16,29 +26,9 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
-      },
-      fk_user: {
-        allowNull: false,
-        type: Sequelize.INTEGER,
-        onDelete: 'CASCADE',
-        references: {
-          model: 'Users',
-          key: 'id',
-          as: 'fk_user'
-        }
-      },
-      fk_class: {
-        allowNull: false,
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'Classes',
-          key: 'id',
-          as: 'fk_class'
-        }
       }
     })
   },
-  down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Students', {})
-  }
+  down: (queryInterface) =>
+    queryInterface.dropTable('students', {})
 }
