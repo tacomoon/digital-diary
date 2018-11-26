@@ -1,7 +1,6 @@
 'use strict'
 
 const sequelize = require('../utils/sequelize')
-
 const User = require('./user')
 const Subject = require('./subject')
 
@@ -16,6 +15,7 @@ Teacher.belongsTo(User, {
 )
 Teacher.belongsTo(Subject, {
   foreignKey: 'subject_id',
+  targetKey: 'id',
   onUpdate: 'cascade',
   onDelete: 'restrict'
 })

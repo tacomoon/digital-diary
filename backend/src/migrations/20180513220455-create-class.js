@@ -2,7 +2,7 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => queryInterface
-    .createTable('subjects', {
+    .createTable('classes', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -23,23 +23,23 @@ module.exports = {
       }
     })
     .then(() => queryInterface
-      .addIndex('subjects', { name: 'i_subject__name', fields: ['name'] })
+      .addIndex('classes', { name: 'i_class__name', fields: ['name'] })
     )
     .then(() => queryInterface
-      .addColumn('teachers', 'subject_id', {
-          allowNull: false,
-          type: Sequelize.INTEGER,
-          references: {
-            model: 'subjects',
-            key: 'id'
-          },
-          onUpdate: 'cascade',
-          onDelete: 'restrict',
-        }
-      )
+      .addColumn('students', 'class_id', {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'classes',
+          key: 'id'
+        },
+        onUpdate: 'cascade',
+        onDelete: 'restrict',
+      })
     ),
+
   down: (queryInterface) => queryInterface
-    .removeColumn('teachers', 'subject_id')
-    .then(() => queryInterface.removeIndex('subjects', 'i_subject__name'))
-    .then(() => queryInterface.dropTable('subjects', {}))
+    .removeColumn('students', 'class_id')
+    .then(() => queryInterface.removeIndex('classes', 'i_class__name'))
+    .then(() => queryInterface.dropTable('classes', {}))
 }

@@ -1,27 +1,25 @@
 'use strict'
 
-const { DataTypes } = require('sequelize')
+const { Sequelize } = require('sequelize')
 const sequelize = require('../utils/sequelize')
-
-const Teacher = require('./teacher')
-const Student = require('./student')
 
 const schema = {
   name: {
-    type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
+    type: Sequelize.STRING
   }
 }
 
 const options = {
   indexes: [
-    { fields: ['name'] }
+    {
+      name: 'i_class__name',
+      fields: ['name']
+    }
   ]
 }
 
-const Class = sequelize.define('Class', schema, options)
-
-Class.hasMany(Student, { foreignKey: 'fk_class' })
-Class.belongsToMany(Teacher, { through: 'TeacherToSubjects', foreignKey: 'fk_class' })
+const Class = sequelize
+  .define('class', schema, options)
 
 module.exports = Class
