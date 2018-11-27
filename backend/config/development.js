@@ -18,8 +18,8 @@ module.exports = {
   },
   database: {
     seed: {
-      teachers: 10,
-      students: 100,
+      teachers: 15,
+      students: 200,
       classes: 10
     },
     config: {

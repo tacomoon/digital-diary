@@ -2,6 +2,7 @@
 
 const { Sequelize } = require('sequelize')
 const sequelize = require('../utils/sequelize')
+const Teacher = require('./teacher')
 
 const schema = {
   name: {
@@ -21,5 +22,11 @@ const options = {
 
 const Class = sequelize
   .define('class', schema, options)
+
+Class.belongsToMany(Teacher, {
+  through: 'teachers_to_classes',
+  foreignKey: 'class_id',
+  otherKey: 'teacher_id'
+})
 
 module.exports = Class

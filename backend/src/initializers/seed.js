@@ -4,6 +4,7 @@ const Chance = require('chance')
 const { User, Teacher, Student, Subject, Class } = require('../models')
 
 const config = require('config')
+const sequelize = require('../utils/sequelize')
 const { console: logger } = require('../utils/logger')
 
 const chance = new Chance()
@@ -95,6 +96,29 @@ async function seedStudents(seedCount, classes) {
   return students
 }
 
+async function seedTeacherToClass(teachers, classes) {
+  // language=SQL
+  const [[result]] = await sequelize.query('SELECT count(*) FROM teachers_to_classes')
+  if (result.count > 0) {
+    logger.info('Teacher to class already exists, skip seed')
+    return
+  }
+
+  logger.info(`Seeding teacher to class`)
+  const subjectToTeachers = teachers.reduce((map, teacher) => {
+    (map[teacher['subject_id']] = map[teacher['subject_id']] || []).push(teacher)
+    return map
+  }, {})
+  const subjects = Object.keys(subjectToTeachers)
+
+  for (let clazz of classes) {
+    for (let subject of subjects) {
+      const subjectTeachers = subjectToTeachers[subject]
+      await createTeacherToClass(randomElement(subjectTeachers), clazz)
+    }
+  }
+}
+
 async function seedMarks(transaction) {
   // TODO [EG]:
 }
@@ -167,6 +191,11 @@ function createUser() {
     .catch(reason => logger.error(`Failed to create a user: ${reason}`))
 }
 
+function createTeacherToClass(teacher, clazz) {
+  // language=SQL
+  return sequelize.query(`INSERT INTO teachers_to_classes VALUES (${teacher.id}, ${clazz.id})`)
+}
+
 // Utils
 function randomElement(array) {
   return array[Math.floor(Math.random() * array.length)]
@@ -189,5 +218,6 @@ module.exports = async () => {
   if (students.length === 0) {
     throw new Error('Unable to seed teachers')
   }
+  await seedTeacherToClass(teachers, classes)
   // await seedMarks()
 }
