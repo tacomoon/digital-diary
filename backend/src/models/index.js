@@ -6,6 +6,7 @@ const Student = require('./student')
 const Subject = require('./subject')
 const Class = require('./class')
 const Mark = require('./mark')
+const TeachersToClasses = require('./teachers-to-classes')
 
 module.exports = {
   User,
@@ -13,5 +14,6 @@ module.exports = {
   Student,
   Subject,
   Class,
-  Mark
+  Mark,
+  TeachersToClasses,
 }

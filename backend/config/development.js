@@ -18,10 +18,12 @@ module.exports = {
   },
   database: {
     seed: {
-      teachers: 15,
-      students: 200,
-      classes: 10,
-      marks: 1000
+      subjectNames: ['Maths', 'Science', 'Information Technology',
+        'Physical Education', 'History', 'Music', 'Art', 'English', 'Geography'],
+      teacherCount: 15,
+      studentCount: 200,
+      classCount: 10,
+      markCount: 1000
     },
     config: {
       username: 'postgres',
