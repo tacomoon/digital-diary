@@ -13,7 +13,6 @@ Student.belongsTo(User, {
 })
 Student.belongsTo(Class, {
   foreignKey: 'class_id',
-  sourceKey: 'id',
   onUpdate: 'cascade',
   onDelete: 'restrict'
 })

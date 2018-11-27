@@ -20,7 +20,8 @@ module.exports = {
     seed: {
       teachers: 15,
       students: 200,
-      classes: 10
+      classes: 10,
+      marks: 1000
     },
     config: {
       username: 'postgres',

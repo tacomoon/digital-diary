@@ -15,7 +15,6 @@ Teacher.belongsTo(User, {
 )
 Teacher.belongsTo(Subject, {
   foreignKey: 'subject_id',
-  targetKey: 'id',
   onUpdate: 'cascade',
   onDelete: 'restrict'
 })

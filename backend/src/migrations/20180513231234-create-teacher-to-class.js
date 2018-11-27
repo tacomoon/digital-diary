@@ -22,17 +22,25 @@ module.exports = {
           },
           onUpdate: 'cascade',
           onDelete: 'restrict',
-        }
+        },
+        createdAt: {
+          allowNull: false,
+          type: Sequelize.DATE
+        },
+        updatedAt: {
+          allowNull: false,
+          type: Sequelize.DATE
+        },
       }
     )
     .then(() => queryInterface
       .addConstraint('teachers_to_classes', ['teacher_id', 'class_id'], {
-        name: 'teachers_to_classes_constrain_pk',
+        name: 'teachers_to_classes__constrain_pk',
         type: 'primary key'
       })
     ),
 
   down: (queryInterface) => queryInterface
-    .removeConstraint('teachers_to_classes', 'teachers_to_classes_constrain_pk')
+    .removeConstraint('teachers_to_classes', 'teachers_to_classes__constrain_pk')
     .then(() => queryInterface.dropTable('teachers_to_classes', {}))
 }

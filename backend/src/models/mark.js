@@ -1,33 +1,55 @@
 'use strict'
 
-const { DataTypes } = require('sequelize')
+const { Sequelize } = require('sequelize')
 const sequelize = require('../utils/sequelize')
-
+const Subject = require('./subject')
 const Student = require('./student')
 const Teacher = require('./teacher')
-const Subject = require('./subject')
 
 const schema = {
   value: {
-    type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
+    type: Sequelize.STRING,
   },
   date: {
-    type: DataTypes.DATE,
-    allowNull: false
+    allowNull: false,
+    type: Sequelize.DATE,
   }
 }
 
 const options = {
   index: [
-    { fields: ['date'] }
+    {
+      name: 'i_marks__date',
+      fields: ['date']
+    },
+    {
+      name: 'i_marks__student_id',
+      fields: ['student_id']
+    },
+    {
+      name: 'i_marks__teacher_id',
+      fields: ['teacher_id']
+    },
   ]
 }
 
-const Mark = sequelize.define('Mark', schema, options)
+const Mark = sequelize.define('mark', schema, options)
 
-Mark.belongsTo(Student, { foreignKey: 'fk_student', targetKey: 'id' })
-Mark.belongsTo(Teacher, { foreignKey: 'fk_teacher' })
-Mark.belongsTo(Subject, { foreignKey: 'fk_subject' })
+Mark.belongsTo(Subject, {
+  foreignKey: 'subject_id',
+  onUpdate: 'cascade',
+  onDelete: 'restrict'
+})
+Mark.belongsTo(Student, {
+  foreignKey: 'student_id',
+  onUpdate: 'cascade',
+  onDelete: 'restrict'
+})
+Mark.belongsTo(Teacher, {
+  foreignKey: 'teacher_id',
+  onUpdate: 'cascade',
+  onDelete: 'restrict'
+})
 
 module.exports = Mark
