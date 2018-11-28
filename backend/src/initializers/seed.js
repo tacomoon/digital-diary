@@ -119,13 +119,15 @@ async function seedMarks(seedCount, subjects, classes, students, teachers) {
   const models = []
   logger.info(`Seeding ${seedCount} marks`)
 
+  // language=SQL
+  const [teacher_to_class] = await sequelize.query('SELECT teacher_id, class_id FROM teachers_to_classes')
+
   for (let i = 0; i < seedCount; i++) {
     const student = randomElement(students)
-    const clazz = classes.find(it => it.id <= student.class_id)
-    // TODO [EG]: undefined
-    const classTeachers = teachers.filter(it => it.class_id === clazz.teacher_id)
-    const teacher = randomElement(classTeachers)
-    const subject = subjects.find(it => it.id <= teacher.subject_id)
+    const clazz = classes.find(it => it.id === student.class_id)
+    const filtered = teacher_to_class.filter(it => it.class_id === clazz.id).map(it => it.teacher_id)
+    const teacher = randomElement(teachers.filter(it => filtered.includes(it.id)))
+    const subject = subjects.find(it => it.id === teacher.subject_id)
 
     models.push({
       value: Math.random() * 5,
