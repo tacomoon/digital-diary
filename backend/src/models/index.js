@@ -6,8 +6,6 @@ const Students = require('./students')
 const Subjects = require('./subjects')
 const Classes = require('./classes')
 const Marks = require('./marks')
-// TODO [EG]: remove
-const TeachersToClasses = require('./teachers-to-classes')
 
 const CASCADE_POLITIC = 'CASCADE'
 const RESTRICT_POLITIC = 'RESTRICT'
@@ -24,8 +22,7 @@ Teachers.belongsTo(Subjects, {
 })
 Teachers.belongsToMany(Classes, {
   through: 'teachers_to_classes',
-  foreignKey: 'teacher_id',
-  otherKey: 'class_id'
+  foreignKey: 'teacher_id'
 })
 Teachers.hasMany(Marks, {
   foreignKey: 'teacher_id',
@@ -67,8 +64,7 @@ Classes.hasMany(Students, {
 })
 Classes.belongsToMany(Teachers, {
   through: 'teachers_to_classes',
-  foreignKey: 'class_id',
-  otherKey: 'teacher_id'
+  foreignKey: 'class_id'
 })
 
 Marks.belongsTo(Teachers, {
@@ -94,5 +90,4 @@ module.exports = {
   Subjects,
   Classes,
   Marks,
-  TeachersToClasses,
 }

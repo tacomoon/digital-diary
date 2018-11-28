@@ -1,9 +1,10 @@
 'use strict'
 
 const Chance = require('chance')
-const { Users, Teachers, Students, Subjects, Classes, Marks, TeachersToClasses } = require('../models')
+const { Users, Teachers, Students, Subjects, Classes, Marks } = require('../models')
 
 const config = require('config')
+const sequelize = require('../utils/sequelize')
 const { console: logger } = require('../utils/logger')
 
 const chance = new Chance()
@@ -24,7 +25,7 @@ async function seedSubjects() {
     models.push({ name: subjectNames[i] })
   }
 
-  const subjects = await Subjects.bulkCreate(models, {returning: true})
+  const subjects = await Subjects.bulkCreate(models, { returning: true })
     .catch(reason => logger.error(`Failed to create subjects: ${reason}`))
 
   logger.info(`${subjects.length} subjects seed`)
@@ -47,7 +48,7 @@ async function seedClasses(seedCount) {
     models.push({ name: `${number} ${letter}` })
   }
 
-  const classes = await Classes.bulkCreate(models, {returning: true})
+  const classes = await Classes.bulkCreate(models, { returning: true })
     .catch(reason => logger.error(`Failed to create classes: ${reason}`))
 
   logger.info(`${classes.length} classes seed`)
@@ -74,7 +75,7 @@ async function seedTeachers(seedCount, subjects) {
     })
   }
 
-  const teachers = await Teachers.bulkCreate(models, {returning: true})
+  const teachers = await Teachers.bulkCreate(models, { returning: true })
     .catch(reason => logger.error(`Failed to create teacher: ${reason}`))
 
   logger.info(`${teachers.length} teachers seed`)
@@ -101,7 +102,7 @@ async function seedStudents(seedCount, classes) {
     })
   }
 
-  const students = await Students.bulkCreate(models, {returning: true})
+  const students = await Students.bulkCreate(models, { returning: true })
     .catch(reason => logger.error(`Failed to create a student: ${reason}`))
 
   logger.info(`${students.length} students seed`)
@@ -120,10 +121,11 @@ async function seedMarks(seedCount, subjects, classes, students, teachers) {
 
   for (let i = 0; i < seedCount; i++) {
     const student = randomElement(students)
-    const clazz = classes.find(it => it.id === student.class_id)
+    const clazz = classes.find(it => it.id <= student.class_id)
+    // TODO [EG]: undefined
     const classTeachers = teachers.filter(it => it.class_id === clazz.teacher_id)
     const teacher = randomElement(classTeachers)
-    const subject = subjects.find(it => it.id === teacher.subject_id)
+    const subject = subjects.find(it => it.id <= teacher.subject_id)
 
     models.push({
       value: Math.random() * 5,
@@ -134,7 +136,7 @@ async function seedMarks(seedCount, subjects, classes, students, teachers) {
     })
   }
 
-  const marks = await Marks.bulkCreate(models, {returning: true})
+  const marks = await Marks.bulkCreate(models, { returning: true })
     .catch(reason => logger.error(`Failed to create a mark: ${reason}`))
 
   logger.info(`${marks.length} marks seed`)
@@ -153,7 +155,7 @@ async function seedUsers(seedCount) {
     })
   }
 
-  const users = await Users.bulkCreate(models, {returning: true})
+  const users = await Users.bulkCreate(models, { returning: true })
     .catch(reason => logger.error(`Failed to create a user: ${reason}`))
 
   logger.info(`${users.length} users seed`)
@@ -161,35 +163,32 @@ async function seedUsers(seedCount) {
 }
 
 async function seedTeachersToClasses(teachers, classes) {
-  const { rows: existing, count } = await TeachersToClasses.findAndCountAll()
+  // language=SQL
+  const [[{ count }]] = await sequelize.query('SELECT count(*) FROM teachers_to_classes')
   if (count > 0) {
     logger.info('Teacher to class already exists, skip seed')
-    return existing
+    return
   }
 
-  const models = []
   logger.info(`Seeding teacher to class`)
 
-  const subjectToTeachers = teachers.reduce((map, teacher) => {
-    (map[teacher['subject_id']] = map[teacher['subject_id']] || []).push(teacher)
-    return map
-  }, {})
+  let sql = 'INSERT INTO teachers_to_classes VALUES'
+  const subjectToTeachers = groupBy(teachers, 'subject_id')
 
+  let counter = 0
   for (let clazz of classes) {
     for (let subject of Object.keys(subjectToTeachers)) {
-      const subjectTeachers = subjectToTeachers[subject]
-      models.push({
-        teacher_id: randomElement(subjectTeachers).id,
-        class_id: clazz.id
-      })
+      if (counter !== 0) {
+        sql += ','
+      }
+      sql += ` (${randomElement(subjectToTeachers[subject]).id}, ${clazz.id}, now(), now())`
+      counter++
     }
   }
 
-  const teachersToClasses = await TeachersToClasses.bulkCreate(models, {returning: true})
-    .catch(reason => logger.error(`Failed to create a teachers to classes: ${reason}`))
-
-  logger.info(`${teachersToClasses.length} teachers to classes seed`)
-  return teachersToClasses
+  await sequelize.query(sql)
+  logger.info(`${counter} teachers to classes seed`)
+  return counter
 }
 
 // Utils
@@ -197,29 +196,37 @@ function randomElement(array) {
   return array[Math.floor(Math.random() * array.length)]
 }
 
+function groupBy(collection, field) {
+  const transformer = (map, teacher) => {
+    (map[teacher[field]] = map[teacher[field]] || []).push(teacher)
+    return map
+  }
+  return collection.reduce(transformer, {})
+}
+
 module.exports = async () => {
   const subjects = await seedSubjects()
-  if (subjects.length === 0) {
+  if (subjects.length <= 0) {
     throw new Error('Unable to seed subjects')
   }
   const classes = await seedClasses(classCount)
-  if (classes.length === 0) {
+  if (classes.length <= 0) {
     throw new Error('Unable to seed classes')
   }
   const teachers = await seedTeachers(teacherCount, subjects, classes)
-  if (teachers.length === 0) {
+  if (teachers.length <= 0) {
     throw new Error('Unable to seed teachers')
   }
   const students = await seedStudents(studentCount, classes)
-  if (students.length === 0) {
+  if (students.length <= 0) {
     throw new Error('Unable to seed teachers')
   }
   const teachersToClasses = await seedTeachersToClasses(teachers, classes)
-  if (teachersToClasses.length === 0) {
+  if (teachersToClasses <= 0) {
     throw new Error('Unable to seed teachers to classes')
   }
   const marks = await seedMarks(markCount, subjects, classes, students, teachers)
-  if (marks.length === 0) {
+  if (marks.length <= 0) {
     throw new Error('Unable to seed marks')
   }
 }
