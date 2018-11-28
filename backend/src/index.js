@@ -20,7 +20,7 @@ const main = async () => {
 
   await sequelizeInitializer()
   await seedInitializer()
-// await routesInitializer(application)
+  // await routesInitializer(application)
   await middlewareInitializer(application)
 
   application
@@ -29,4 +29,7 @@ const main = async () => {
 }
 
 main()
-  .catch(reason => logger.error(`Failed to start server on port ${port}: ${reason}`))
+  .catch(reason => {
+    logger.error(`Failed to start server on port ${port}: ${reason}`)
+    process.exit(1)
+  })

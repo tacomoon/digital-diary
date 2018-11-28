@@ -207,6 +207,8 @@ function groupBy(collection, field) {
 }
 
 module.exports = async () => {
+  logger.info("Database initialization started")
+
   const subjects = await seedSubjects()
   if (subjects.length <= 0) {
     throw new Error('Unable to seed subjects')
@@ -231,4 +233,6 @@ module.exports = async () => {
   if (marks.length <= 0) {
     throw new Error('Unable to seed marks')
   }
+
+  logger.info("Database initialization done")
 }
