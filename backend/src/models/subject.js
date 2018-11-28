@@ -9,17 +9,12 @@ const schema = {
     type: Sequelize.STRING
   }
 }
-
 const options = {
   indexes: [
-    {
-      name: 'i_subject__name',
-      fields: ['name']
-    }
+    { name: 'i_subject__name', fields: ['name'] }
   ]
 }
 
 const Subject = sequelize
   .define('subject', schema, options)
-
 module.exports = Subject

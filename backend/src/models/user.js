@@ -20,18 +20,11 @@ const schema = {
 
 const options = {
   indexes: [
-    {
-      name: 'i_user__name',
-      fields: ['name']
-    },
-    {
-      name: 'i_user__name',
-      fields: ['phone']
-    }
+    { name: 'i_user__name', fields: ['name'] },
+    { name: 'i_user__name', fields: ['phone'] }
   ]
 }
 
-const User = sequelize
+const users = sequelize
   .define('user', schema, options)
-
-module.exports = User
+module.exports = users
