@@ -1,0 +1,36 @@
+{
+  "name": "digital-diary",
+  "version": "0.0.1",
+  "description": "AMM JS School 2018",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "migrate-status": "../scripts/migrations.sh status",
+    "migrate-up": "../scripts/migrations.sh up",
+    "migrate-down": "../scripts/migrations.sh  down",
+    "migrate-down-all": "../scripts/migrations.sh  down-all",
+    "database": "../scripts/database.sh run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tacomoon/digital-diary.git"
+  },
+  "author": "tacomoon",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tacomoon/digital-diary/issues"
+  },
+  "homepage": "https://github.com/tacomoon/digital-diary#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "chance": "^1.0.13",
+    "config": "^1.30.0",
+    "errorhandler": "^1.5.0",
+    "express": "^4.16.3",
+    "http-status": "^1.1.0",
+    "pg": "^7.6.1",
+    "pg-hstore": "^2.3.2",
+    "sequelize": "^4.41.2",
+    "winston": "^3.1.0"
+  }
+}

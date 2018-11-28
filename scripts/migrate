@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-CONTEXT="$(dirname "$0")/../server"
+CONTEXT="$(dirname "$0")/../backend"
 
 function print_help() {
     echo -e "Commands:"
@@ -12,24 +12,25 @@ function print_help() {
     echo -e "  -n, --number\tUndo number migrations"
 }
 
+cd ${CONTEXT}
 case $1 in
     status )
-        node ${CONTEXT}/src/utils/migrations db:migrate:status
+        node src/utils/migrations db:migrate:status
         ;;
     up )
-        node ${CONTEXT}/src/utils/migrations db:migrate
+        node src/utils/migrations db:migrate
         ;;
     down )
         shift
 
         if [[ -z $1 ]]; then
-            node ${CONTEXT}/src/utils/migrations db:migrate:undo
+            node src/utils/migrations db:migrate:undo
             exit 0
         fi
 
         case $1 in
             -a | --all )
-                node ${CONTEXT}/src/utils/migrations db:migrate:undo:all
+                node src/utils/migrations db:migrate:undo:all
                 exit 0
                 ;;
             -n | --number )
@@ -40,7 +41,7 @@ case $1 in
                 fi
 
                 for i in $(seq 1 $1); do
-                    node ${CONTEXT}/src/utils/migrations db:migrate:undo
+                    node src/utils/migrations db:migrate:undo
                 done
                 exit 0
                 ;;
