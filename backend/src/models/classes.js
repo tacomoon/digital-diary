@@ -15,6 +15,6 @@ const options = {
   ]
 }
 
-const Class = sequelize
-  .define('class', schema, options)
-module.exports = Class
+const Classes = sequelize
+  .define('classes', schema, options)
+module.exports = Classes

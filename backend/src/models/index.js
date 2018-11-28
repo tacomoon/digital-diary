@@ -1,64 +1,98 @@
 'use strict'
 
-const User = require('./user')
-const Teacher = require('./teacher')
-const Student = require('./student')
-const Subject = require('./subject')
-const Class = require('./class')
-const Mark = require('./mark')
+const Users = require('./users')
+const Teachers = require('./teachers')
+const Students = require('./students')
+const Subjects = require('./subjects')
+const Classes = require('./classes')
+const Marks = require('./marks')
+// TODO [EG]: remove
 const TeachersToClasses = require('./teachers-to-classes')
 
-Class.belongsToMany(Teacher, {
+const CASCADE_POLITIC = 'CASCADE'
+const RESTRICT_POLITIC = 'RESTRICT'
+
+Teachers.belongsTo(Users, {
+  foreignKey: 'user_id',
+  onUpdate: CASCADE_POLITIC,
+  onDelete: CASCADE_POLITIC
+})
+Teachers.belongsTo(Subjects, {
+  foreignKey: 'subject_id',
+  onUpdate: CASCADE_POLITIC,
+  onDelete: RESTRICT_POLITIC
+})
+Teachers.belongsToMany(Classes, {
+  through: 'teachers_to_classes',
+  foreignKey: 'teacher_id',
+  otherKey: 'class_id'
+})
+Teachers.hasMany(Marks, {
+  foreignKey: 'teacher_id',
+  onUpdate: CASCADE_POLITIC,
+  onDelete: RESTRICT_POLITIC
+})
+
+Students.belongsTo(Users, {
+  foreignKey: 'user_id',
+  onUpdate: CASCADE_POLITIC,
+  onDelete: CASCADE_POLITIC,
+})
+Students.belongsTo(Classes, {
+  foreignKey: 'class_id',
+  onUpdate: CASCADE_POLITIC,
+  onDelete: RESTRICT_POLITIC
+})
+Students.hasMany(Marks, {
+  foreignKey: 'student_id',
+  onUpdate: CASCADE_POLITIC,
+  onDelete: RESTRICT_POLITIC
+})
+
+Subjects.hasMany(Teachers, {
+  foreignKey: 'subject_id',
+  onUpdate: CASCADE_POLITIC,
+  onDelete: RESTRICT_POLITIC
+})
+Subjects.hasMany(Marks, {
+  foreignKey: 'subject_id',
+  onUpdate: CASCADE_POLITIC,
+  onDelete: RESTRICT_POLITIC
+})
+
+Classes.hasMany(Students, {
+  foreignKey: 'class_id',
+  onUpdate: CASCADE_POLITIC,
+  onDelete: RESTRICT_POLITIC
+})
+Classes.belongsToMany(Teachers, {
   through: 'teachers_to_classes',
   foreignKey: 'class_id',
   otherKey: 'teacher_id'
 })
 
-Mark.belongsTo(Subject, {
-  foreignKey: 'subject_id',
-  onUpdate: 'cascade',
-  onDelete: 'restrict'
-})
-Mark.belongsTo(Student, {
-  foreignKey: 'student_id',
-  onUpdate: 'cascade',
-  onDelete: 'restrict'
-})
-Mark.belongsTo(Teacher, {
+Marks.belongsTo(Teachers, {
   foreignKey: 'teacher_id',
-  onUpdate: 'cascade',
-  onDelete: 'restrict'
+  onUpdate: CASCADE_POLITIC,
+  onDelete: RESTRICT_POLITIC
 })
-
-Student.belongsTo(User, {
-  foreignKey: 'user_id',
-  onUpdate: 'cascade',
-  onDelete: 'cascade',
+Marks.belongsTo(Students, {
+  foreignKey: 'student_id',
+  onUpdate: CASCADE_POLITIC,
+  onDelete: RESTRICT_POLITIC
 })
-Student.belongsTo(Class, {
-  foreignKey: 'class_id',
-  onUpdate: 'cascade',
-  onDelete: 'restrict'
-})
-
-Teacher.belongsTo(User, {
-    foreignKey: 'user_id',
-    onUpdate: 'cascade',
-    onDelete: 'cascade'
-  }
-)
-Teacher.belongsTo(Subject, {
+Marks.belongsTo(Subjects, {
   foreignKey: 'subject_id',
-  onUpdate: 'cascade',
-  onDelete: 'restrict'
+  onUpdate: CASCADE_POLITIC,
+  onDelete: RESTRICT_POLITIC
 })
 
 module.exports = {
-  User,
-  Teacher,
-  Student,
-  Subject,
-  Class,
-  Mark,
+  Users,
+  Teachers,
+  Students,
+  Subjects,
+  Classes,
+  Marks,
   TeachersToClasses,
 }

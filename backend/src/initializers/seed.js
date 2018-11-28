@@ -1,7 +1,7 @@
 'use strict'
 
 const Chance = require('chance')
-const { User, Teacher, Student, Subject, Class, Mark, TeachersToClasses } = require('../models')
+const { Users, Teachers, Students, Subjects, Classes, Marks, TeachersToClasses } = require('../models')
 
 const config = require('config')
 const { console: logger } = require('../utils/logger')
@@ -11,7 +11,7 @@ const { subjectNames, teacherCount, studentCount, classCount, markCount } = conf
 
 // Seed functions
 async function seedSubjects() {
-  const { rows: existing, count } = await Subject.findAndCountAll()
+  const { rows: existing, count } = await Subjects.findAndCountAll()
   if (count) {
     logger.info('Subjects already exists, skip seed')
     return existing
@@ -24,7 +24,7 @@ async function seedSubjects() {
     models.push({ name: subjectNames[i] })
   }
 
-  const subjects = await Subject.bulkCreate(models, {returning: true})
+  const subjects = await Subjects.bulkCreate(models, {returning: true})
     .catch(reason => logger.error(`Failed to create subjects: ${reason}`))
 
   logger.info(`${subjects.length} subjects seed`)
@@ -32,7 +32,7 @@ async function seedSubjects() {
 }
 
 async function seedClasses(seedCount) {
-  const { rows: existing, count } = await Class.findAndCountAll()
+  const { rows: existing, count } = await Classes.findAndCountAll()
   if (count) {
     logger.info('Classes already exists, skip seed')
     return existing
@@ -47,7 +47,7 @@ async function seedClasses(seedCount) {
     models.push({ name: `${number} ${letter}` })
   }
 
-  const classes = await Class.bulkCreate(models, {returning: true})
+  const classes = await Classes.bulkCreate(models, {returning: true})
     .catch(reason => logger.error(`Failed to create classes: ${reason}`))
 
   logger.info(`${classes.length} classes seed`)
@@ -55,7 +55,7 @@ async function seedClasses(seedCount) {
 }
 
 async function seedTeachers(seedCount, subjects) {
-  const { rows: existing, count } = await Teacher.findAndCountAll()
+  const { rows: existing, count } = await Teachers.findAndCountAll()
   if (count) {
     logger.info('Teachers already exists, skip seed')
     return existing
@@ -74,7 +74,7 @@ async function seedTeachers(seedCount, subjects) {
     })
   }
 
-  const teachers = await Teacher.bulkCreate(models, {returning: true})
+  const teachers = await Teachers.bulkCreate(models, {returning: true})
     .catch(reason => logger.error(`Failed to create teacher: ${reason}`))
 
   logger.info(`${teachers.length} teachers seed`)
@@ -82,7 +82,7 @@ async function seedTeachers(seedCount, subjects) {
 }
 
 async function seedStudents(seedCount, classes) {
-  const { rows: existing, count } = await Student.findAndCountAll()
+  const { rows: existing, count } = await Students.findAndCountAll()
   if (count) {
     logger.info('Students already exists, skip seed')
     return existing
@@ -101,11 +101,63 @@ async function seedStudents(seedCount, classes) {
     })
   }
 
-  const students = await Student.bulkCreate(models, {returning: true})
+  const students = await Students.bulkCreate(models, {returning: true})
     .catch(reason => logger.error(`Failed to create a student: ${reason}`))
 
   logger.info(`${students.length} students seed`)
   return students
+}
+
+async function seedMarks(seedCount, subjects, classes, students, teachers) {
+  const { rows: existing, count } = await Marks.findAndCountAll()
+  if (count) {
+    logger.info('Marks already exists, skip seed')
+    return existing
+  }
+
+  const models = []
+  logger.info(`Seeding ${seedCount} marks`)
+
+  for (let i = 0; i < seedCount; i++) {
+    const student = randomElement(students)
+    const clazz = classes.find(it => it.id === student.class_id)
+    const classTeachers = teachers.filter(it => it.class_id === clazz.teacher_id)
+    const teacher = randomElement(classTeachers)
+    const subject = subjects.find(it => it.id === teacher.subject_id)
+
+    models.push({
+      value: Math.random() * 5,
+      date: chance.date({ year: 2018 }),
+      subject_id: subject.id,
+      student_id: student.id,
+      teacher_id: teacher.id
+    })
+  }
+
+  const marks = await Marks.bulkCreate(models, {returning: true})
+    .catch(reason => logger.error(`Failed to create a mark: ${reason}`))
+
+  logger.info(`${marks.length} marks seed`)
+  return marks
+}
+
+async function seedUsers(seedCount) {
+  const models = []
+  logger.info(`Seeding ${seedCount} users`)
+
+  for (let i = 0; i < seedCount; i++) {
+    models.push({
+      name: chance.name(),
+      address: chance.address(),
+      phone: chance.phone({ country: 'us', mobile: true })
+    })
+  }
+
+  const users = await Users.bulkCreate(models, {returning: true})
+    .catch(reason => logger.error(`Failed to create a user: ${reason}`))
+
+  logger.info(`${users.length} users seed`)
+  return users
 }
 
 async function seedTeachersToClasses(teachers, classes) {
@@ -140,58 +192,6 @@ async function seedTeachersToClasses(teachers, classes) {
   return teachersToClasses
 }
 
-async function seedMarks(seedCount, subjects, classes, students, teachers) {
-  const { rows: existing, count } = await Mark.findAndCountAll()
-  if (count) {
-    logger.info('Marks already exists, skip seed')
-    return existing
-  }
-
-  const models = []
-  logger.info(`Seeding ${seedCount} marks`)
-
-  for (let i = 0; i < seedCount; i++) {
-    const student = randomElement(students)
-    const clazz = classes.find(it => it.id === student.class_id)
-    const classTeachers = teachers.filter(it => it.class_id === clazz.teacher_id)
-    const teacher = randomElement(classTeachers)
-    const subject = subjects.find(it => it.id === teacher.subject_id)
-
-    models.push({
-      value: Math.random() * 5,
-      date: chance.date({ year: 2018 }),
-      subject_id: subject.id,
-      student_id: student.id,
-      teacher_id: teacher.id
-    })
-  }
-
-  const marks = await Mark.bulkCreate(models, {returning: true})
-    .catch(reason => logger.error(`Failed to create a mark: ${reason}`))
-
-  logger.info(`${marks.length} marks seed`)
-  return marks
-}
-
-async function seedUsers(seedCount) {
-  const models = []
-  logger.info(`Seeding ${seedCount} users`)
-
-  for (let i = 0; i < seedCount; i++) {
-    models.push({
-      name: chance.name(),
-      address: chance.address(),
-      phone: chance.phone({ country: 'us', mobile: true })
-    })
-  }
-
-  const users = await User.bulkCreate(models, {returning: true})
-    .catch(reason => logger.error(`Failed to create a user: ${reason}`))
-
-  logger.info(`${users.length} users seed`)
-  return users
-}
-
 // Utils
 function randomElement(array) {
   return array[Math.floor(Math.random() * array.length)]
@@ -206,7 +206,7 @@ module.exports = async () => {
   if (classes.length === 0) {
     throw new Error('Unable to seed classes')
   }
-  const teachers = await seedTeachers(teacherCount, subjects)
+  const teachers = await seedTeachers(teacherCount, subjects, classes)
   if (teachers.length === 0) {
     throw new Error('Unable to seed teachers')
   }

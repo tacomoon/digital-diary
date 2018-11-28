@@ -1,8 +1,8 @@
 'use strict'
 
 const sequelize = require('../utils/sequelize')
-const Teacher = require('./teacher')
-const Class = require('./class')
+const Teacher = require('./teachers')
+const Class = require('./classes')
 
 const TeachersToClasses = sequelize.define('teachers_to_classes', {})
 

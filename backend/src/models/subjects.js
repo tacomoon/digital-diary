@@ -15,6 +15,6 @@ const options = {
   ]
 }
 
-const Subject = sequelize
-  .define('subject', schema, options)
-module.exports = Subject
+const Subjects = sequelize
+  .define('subjects', schema, options)
+module.exports = Subjects

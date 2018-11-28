@@ -22,6 +22,6 @@ const options = {
   ]
 }
 
-const Mark = sequelize
-  .define('mark', schema, options)
-module.exports = Mark
+const Marks = sequelize
+  .define('marks', schema, options)
+module.exports = Marks

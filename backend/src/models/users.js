@@ -26,5 +26,5 @@ const options = {
 }
 
 const users = sequelize
-  .define('user', schema, options)
+  .define('users', schema, options)
 module.exports = users
