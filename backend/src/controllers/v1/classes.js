@@ -6,7 +6,7 @@ const { Classes, Students, Users, Teachers } = require('../../models')
 
 const router = new express.Router({})
 
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', async (req, res) => {
   const clazz = await Classes.findByPk(req.params.id)
   const students = await Students.findAll({
     where: { class_id: clazz.id },
@@ -16,7 +16,7 @@ router.get('/:id', async (req, res, next) => {
   res.json({ name: clazz.name, students: students.map(mapStudent) })
 })
 
-router.get('/student/:id', async (req, res, next) => {
+router.get('/student/:id', async (req, res) => {
   const student = await Students.findByPk(req.params.id)
   const clazz = await student.getClass()
   const students = await Students.findAll({
@@ -27,7 +27,7 @@ router.get('/student/:id', async (req, res, next) => {
   res.json({ name: clazz.name, students: students.map(mapStudent) })
 })
 
-router.get('/teacher/:id', async (req, res, next) => {
+router.get('/teacher/:id', async (req, res) => {
   const teacher = await Teachers.findByPk(req.params.id)
   const classes = await teacher.getClasses()
 
