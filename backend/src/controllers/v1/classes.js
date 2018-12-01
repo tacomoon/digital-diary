@@ -1,7 +1,7 @@
 'use strict'
 
 const express = require('express')
-const { mapClass, mapStudent } = require('../../utils/entity-mappers')
+const { mapClassCore, mapClassExtended } = require('../../utils/entity-mappers')
 const { Classes, Students, Users, Teachers } = require('../../models')
 
 const router = new express.Router({})
@@ -13,25 +13,21 @@ router.get('/:id', async (req, res) => {
     include: [{ model: Users }]
   })
 
-  res.json({ name: clazz.name, students: students.map(mapStudent) })
+  res.json(mapClassExtended(clazz, students))
 })
 
 router.get('/student/:id', async (req, res) => {
   const student = await Students.findByPk(req.params.id)
   const clazz = await student.getClass()
-  const students = await Students.findAll({
-    where: { class_id: clazz.id },
-    include: [{ model: Users }]
-  })
 
-  res.json({ name: clazz.name, students: students.map(mapStudent) })
+  res.redirect(`../${clazz.id}`)
 })
 
 router.get('/teacher/:id', async (req, res) => {
   const teacher = await Teachers.findByPk(req.params.id)
   const classes = await teacher.getClasses()
 
-  res.json(classes.map(mapClass))
+  res.json(classes.map(mapClassCore))
 })
 
 module.exports = router

@@ -1,0 +1,220 @@
+openapi: "3.0.0"
+info:
+  title: Digital Diary
+  description: Description
+  version: 0.0.3
+  license:
+    name: ISC
+servers:
+  - url: http://localhost:8080/api/v1
+tags:
+  - name: Classes
+    description: class operations
+  - name: Marks
+    description: marks operations
+
+paths:
+  /classes/{classId}:
+    get:
+      tags:
+        - Classes
+      summary: Find class by ID
+      parameters:
+        - name: classId
+          in: path
+          description: ID of class to get
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassExtended'
+
+  /classes/student/{studentId}:
+    get:
+      tags:
+        - Classes
+      summary: Find class by Student ID
+      parameters:
+        - name: studentId
+          in: path
+          description: ID of student from class to get
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassExtended'
+
+  /classes/teacher/{teacher_id}:
+    get:
+      tags:
+        - Classes
+      summary: List classes by Teacher ID
+      parameters:
+        - name: teacher_id
+          in: path
+          description: ID of teacher for which to get classes
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassList'
+
+  /marks/student/{student_id}:
+    get:
+      tags:
+        - Marks
+      summary: List weekly marks by Student ID
+      parameters:
+        - name: student_id
+          in: path
+          description: ID of student for which to get marks
+          required: true
+          schema:
+            type: integer
+        - name: from
+          in: query
+          description: Date (yyyy-MM-dd) from week for which get marks (current date by default)
+          required: false
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MarkList'
+
+  /marks/teacher/{teacher_id}/class/{class_id}:
+    get:
+      tags:
+        - Marks
+      summary: List weekly marks by Teacher ID and Class ID
+      parameters:
+        - name: teacher_id
+          in: path
+          description: ID of teacher for which to get marks
+          required: true
+          schema:
+            type: integer
+        - name: class_id
+          in: path
+          description: ID of class from which to get marks
+          required: true
+          schema:
+            type: integer
+        - name: from
+          in: query
+          description: Date (yyyy-MM-dd) from week for which get marks (current date by default)
+          required: false
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MarkList'
+
+components:
+  schemas:
+    Class:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 2
+        name:
+          type: string
+          example: 10 A
+      required:
+        - id
+        - name
+    ClassList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Class'
+    ClassExtended:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: 4 C
+        students:
+          type: array
+          items:
+            $ref: '#/components/schemas/Student'
+      required:
+        - id
+        - name
+        - students
+    Student:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 51
+        name:
+          type: string
+          example: Anakin Skywalker
+        address:
+          type: string
+          example: Slace village, Tatooine
+        phone:
+          type: string
+          example: +1-987-654-321
+      required:
+        - id
+        - name
+        - address
+        - phone
+    Mark:
+      type: object
+      properties:
+        teacher:
+          type: string
+          example: Qui-Gon Jinn
+        student:
+          type: string
+          example: Anakin Skywalker
+        subejct:
+          type: string
+          example: Racing
+        date:
+          type: string
+          format: date
+          example: 0032-05-12
+        value:
+          type: integer
+          example: 5
+      required:
+        - teacher
+        - student
+        - subject
+        - date
+        - value
+    MarkList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Mark'

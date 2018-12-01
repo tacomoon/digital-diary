@@ -1,7 +1,6 @@
 'use strict'
 
 const express = require('express')
-
 const {
   sequelizeInitializer,
   seedInitializer,
@@ -15,7 +14,6 @@ const { console: logger } = require('./utils/logger')
 const { port } = config.get('express')
 
 const main = async () => {
-
   const application = express()
 
   await sequelizeInitializer()

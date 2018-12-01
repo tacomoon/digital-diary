@@ -1,21 +1,20 @@
 'use strict'
 
-const mapClass = ({ id, name }) => ({ id, name })
+const mapUserExtended = ({ name, address, phone }) => ({ name, address, phone })
 
-const mapStudent = ({ id, user: { name, address, phone } }) => ({
-  id, name, address, phone
+const mapStudentExtended = ({ id, user }) => ({ id, ...mapUserExtended(user) })
+
+const mapClassCore = ({ id, name }) => ({ id, name })
+const mapClassExtended = ({ name }, students) => ({
+  name, students: students.map(mapStudentExtended)
 })
 
-const mapMark = ({ date, value, subject, teacher, student }) => ({
-  teacher: teacher.user.name,
-  student: student.user.name,
-  subject: subject.name,
-  date,
-  value
+const mapMarkExtended = ({ date, value, subject, teacher, student }) => ({
+  teacher: teacher.user.name, student: student.user.name, subject: subject.name, date, value
 })
 
 module.exports = {
-  mapClass,
-  mapStudent,
-  mapMark
+  mapClassCore,
+  mapClassExtended,
+  mapMarkExtended
 }

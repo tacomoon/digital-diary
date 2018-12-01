@@ -3,7 +3,7 @@
 const moment = require('moment')
 const express = require('express')
 const { Op } = require('sequelize')
-const { mapMark } = require('../../utils/entity-mappers')
+const { mapMarkExtended } = require('../../utils/entity-mappers')
 const { Marks, Subjects, Students, Teachers, Users } = require('../../models')
 
 const router = new express.Router({})
@@ -31,7 +31,7 @@ router.get('/student/:id', async (req, res) => {
     ]
   })
 
-  res.json(marks.map(mapMark))
+  res.json(marks.map(mapMarkExtended))
 })
 
 router.get('/teacher/:teacher_id/class/:class_id', async (req, res) => {
@@ -65,7 +65,7 @@ router.get('/teacher/:teacher_id/class/:class_id', async (req, res) => {
     ]
   })
 
-  res.json(marks.map(mapMark))
+  res.json(marks.map(mapMarkExtended))
 })
 
 module.exports = router
