@@ -1,10 +1,9 @@
 'use strict'
 
-const mapSubject = ({ id, name }) => ({ id, name })
-
-const mapList = (mapEntityFunction) => ({ count, rows }) => ({ count, entities: rows.map(mapEntityFunction) })
+const mapClass = ({ id, name }) => ({ id, name })
+const mapStudent = ({ id, user: { name, address, phone } }) => ({ id, name, address, phone })
 
 module.exports = {
-  mapSubject,
-  mapList
+  mapClass,
+  mapStudent
 }

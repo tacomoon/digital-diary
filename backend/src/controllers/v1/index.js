@@ -1,7 +1,8 @@
 'use strict'
 
-const subjects = require('./subjects')
+const classes = require('./classes')
 
+// TODO [EG]: handle errors
 module.exports = {
-  subjects
+  classes,
 }

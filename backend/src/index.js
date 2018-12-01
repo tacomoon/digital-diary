@@ -20,7 +20,7 @@ const main = async () => {
 
   await sequelizeInitializer()
   await seedInitializer()
-  // await routesInitializer(application)
+  await routesInitializer(application)
   await middlewareInitializer(application)
 
   application

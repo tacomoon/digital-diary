@@ -1,6 +1,6 @@
 'use strict'
 
-const controllersV1 = require('../controllers/v1')
+const controllers = require('../controllers/v1')
 
 const config = require('config')
 const { console: logger } = require('../utils/logger')
@@ -11,10 +11,10 @@ module.exports = (app) => {
 
   const apiUrl = `/${base}/${version}`
 
-  Object.entries(controllersV1)
-    .forEach(([name, routeHandler]) => {
-      app.use(`${apiUrl}/${name}`, routeHandler)
-      logger.info(`Routes initialization -> route added: ${apiUrl}/${name}`)
+  Object.entries(controllers)
+    .forEach(([name, router]) => {
+      app.use(`${apiUrl}/${name}`, router)
+      logger.info(`Route added: ${apiUrl}/${name}`)
     })
 
   logger.info('Routes initialization done')
