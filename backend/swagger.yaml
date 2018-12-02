@@ -19,6 +19,7 @@ paths:
       tags:
         - Classes
       summary: Find class by ID
+      operationId: "getClassById"
       parameters:
         - name: classId
           in: path
@@ -39,6 +40,7 @@ paths:
       tags:
         - Classes
       summary: Find class by Student ID
+      operationId: "getClassByStudentId"
       parameters:
         - name: studentId
           in: path
@@ -59,6 +61,7 @@ paths:
       tags:
         - Classes
       summary: List classes by Teacher ID
+      operationId: "getClassesByTeacherId"
       parameters:
         - name: teacher_id
           in: path
@@ -79,6 +82,7 @@ paths:
       tags:
         - Marks
       summary: List weekly marks by Student ID
+      operationId: "listMarksByStudentId"
       parameters:
         - name: student_id
           in: path
@@ -106,6 +110,7 @@ paths:
       tags:
         - Marks
       summary: List weekly marks by Teacher ID and Class ID
+      operationId: "listMarksByTeacherIdAndClassId"
       parameters:
         - name: teacher_id
           in: path

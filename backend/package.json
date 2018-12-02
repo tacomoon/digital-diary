@@ -5,11 +5,8 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
-    "migrate-status": "../scripts/migrations.sh status",
-    "migrate-up": "../scripts/migrations.sh up",
-    "migrate-down": "../scripts/migrations.sh  down",
-    "migrate-down-all": "../scripts/migrations.sh  down-all",
-    "database": "../scripts/database.sh run"
+    "swagger": "../scripts/openapi generate",
+    "database": "../scripts/database run && ../scripts/migrate up"
   },
   "repository": {
     "type": "git",
