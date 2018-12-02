@@ -8,7 +8,7 @@ const { handleError } = require('../utils/middleware')
 
 module.exports = (application) => {
   logger.info('Middleware initialization started')
-  const limit = config.get('express.limit')
+  const limit = config.get('express.body.limit')
 
   application.use(bodyParser.json({ limit }))
   application.use(handleError)

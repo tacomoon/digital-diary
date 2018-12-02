@@ -10,7 +10,9 @@ const messageFormat = printf(({ message, timestamp, level }) => `${timestamp} ${
 module.exports = {
   express: {
     port: process.env.DIGITAL_DIARY_PORT || 8080,
-    limit: '10mb'
+    body: {
+      limit: '10mb'
+    }
   },
   api: {
     base: 'api',
