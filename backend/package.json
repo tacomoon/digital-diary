@@ -4,8 +4,9 @@
   "description": "AMM JS School 2018",
   "main": "src/index.js",
   "scripts": {
+    "dev": "nodemon src/index.js",
     "start": "node src/index.js",
-    "swagger": "../scripts/openapi generate",
+    "openapi": "../scripts/openapi generate",
     "database": "../scripts/database run && ../scripts/migrate up"
   },
   "repository": {

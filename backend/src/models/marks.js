@@ -11,6 +11,8 @@ const schema = {
   date: {
     allowNull: false,
     type: Sequelize.DATE,
+    // Sequelize.NOW doesn't work
+    defaultValue: Sequelize.fn('now')
   }
 }
 

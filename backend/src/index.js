@@ -18,8 +18,8 @@ const main = async () => {
 
   await sequelizeInitializer()
   await seedInitializer()
-  await routesInitializer(application)
   await middlewareInitializer(application)
+  await routesInitializer(application)
 
   application
     .listen(port, () => logger.info(`Sever started: http://localhost:${port}`))

@@ -3,7 +3,7 @@
 const moment = require('moment')
 const express = require('express')
 const { Op } = require('sequelize')
-const { mapMarkExtended } = require('../../utils/entity-mappers')
+const { mapMarkCore, mapMarkExtended } = require('../../utils/entity-mappers')
 const { Marks, Subjects, Students, Teachers, Users } = require('../../models')
 
 const router = new express.Router({})
@@ -66,6 +66,35 @@ router.get('/teacher/:teacher_id/class/:class_id', async (req, res) => {
   })
 
   res.json(marks.map(mapMarkExtended))
+})
+
+router.post('/', ({ body }, res) => {
+  Marks
+    .create({
+      teacher_id: body.teacher,
+      student_id: body.student,
+      subject_id: body.subject,
+      value: body.value,
+    })
+    .then(mark => {
+      res.json(mapMarkCore(mark))
+    })
+})
+
+router.put('/:id', (req, res) => {
+  Marks
+    .update({
+        date: Date.now(),
+        value: req.body.value,
+      },
+      {
+        where: { id: req.params.id },
+        returning: true,
+      },
+    )
+    .then(([_, marks]) => {
+      res.json(marks.map(mapMarkCore))
+    })
 })
 
 module.exports = router

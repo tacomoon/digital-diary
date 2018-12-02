@@ -14,14 +14,14 @@ tags:
     description: marks operations
 
 paths:
-  /classes/{classId}:
+  /classes/{class}:
     get:
       tags:
         - Classes
       summary: Find class by ID
-      operationId: "getClassById"
+      operationId: getClassById
       parameters:
-        - name: classId
+        - name: class
           in: path
           description: ID of class to get
           required: true
@@ -35,14 +35,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/ClassExtended'
 
-  /classes/student/{studentId}:
+  /classes/student/{student}:
     get:
       tags:
         - Classes
       summary: Find class by Student ID
-      operationId: "getClassByStudentId"
+      operationId: getClassByStudentId
       parameters:
-        - name: studentId
+        - name: student
           in: path
           description: ID of student from class to get
           required: true
@@ -56,14 +56,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/ClassExtended'
 
-  /classes/teacher/{teacher_id}:
+  /classes/teacher/{teacher}:
     get:
       tags:
         - Classes
       summary: List classes by Teacher ID
-      operationId: "getClassesByTeacherId"
+      operationId: getClassesByTeacherId
       parameters:
-        - name: teacher_id
+        - name: teacher
           in: path
           description: ID of teacher for which to get classes
           required: true
@@ -77,14 +77,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/ClassList'
 
-  /marks/student/{student_id}:
+  /marks/student/{student}:
     get:
       tags:
         - Marks
       summary: List weekly marks by Student ID
-      operationId: "listMarksByStudentId"
+      operationId: listMarksByStudentId
       parameters:
-        - name: student_id
+        - name: student
           in: path
           description: ID of student for which to get marks
           required: true
@@ -103,22 +103,22 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MarkList'
+                $ref: '#/components/schemas/MarkExtendedList'
 
-  /marks/teacher/{teacher_id}/class/{class_id}:
+  /marks/teacher/{teacher}/class/{class}:
     get:
       tags:
         - Marks
       summary: List weekly marks by Teacher ID and Class ID
-      operationId: "listMarksByTeacherIdAndClassId"
+      operationId: listMarksByTeacherIdAndClassId
       parameters:
-        - name: teacher_id
+        - name: teacher
           in: path
           description: ID of teacher for which to get marks
           required: true
           schema:
             type: integer
-        - name: class_id
+        - name: class
           in: path
           description: ID of class from which to get marks
           required: true
@@ -137,7 +137,69 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MarkList'
+                $ref: '#/components/schemas/MarkExtendedList'
+
+  /marks/:
+    post:
+      tags:
+        - Marks
+      summary: Create mark with current date
+      operationId: createMark
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                teacher:
+                  type: integer
+                student:
+                  type: integer
+                subejct:
+                  type: integer
+                value:
+                  type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mark'
+
+
+  /marks/{mark}:
+    put:
+      tags:
+        - Marks
+      summary: Update mark value and date to current
+      operationId: updateMark
+      parameters:
+        - name: mark
+          in: path
+          description: ID of mark to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                mark:
+                  type: integer
+                value:
+                  type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mark'
 
 components:
   schemas:
@@ -197,6 +259,31 @@ components:
     Mark:
       type: object
       properties:
+        id:
+          type: integer
+          example: 12
+        teacher:
+          type: integer
+          example: 3
+        student:
+          type: integer
+          example: 5
+        subject:
+          type: integer
+          example: 1
+        date:
+          type: string
+          format: date
+          example: 2018-06-25
+        value:
+          type: integer
+          example: 3
+    MarkExtended:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 67
         teacher:
           type: string
           example: Qui-Gon Jinn
@@ -219,7 +306,7 @@ components:
         - subject
         - date
         - value
-    MarkList:
+    MarkExtendedList:
       type: array
       items:
-        $ref: '#/components/schemas/Mark'
+        $ref: '#/components/schemas/MarkExtended'

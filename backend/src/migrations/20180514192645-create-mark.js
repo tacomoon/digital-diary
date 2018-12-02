@@ -1,4 +1,5 @@
 'use strict'
+
 module.exports = {
   up: (queryInterface, Sequelize) => queryInterface
     .createTable('marks', {
@@ -14,7 +15,9 @@ module.exports = {
       },
       date: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        // Sequelize.NOW doesn't work
+        defaultValue: Sequelize.fn('now')
       },
       subject_id: {
         allowNull: false,

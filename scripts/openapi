@@ -30,7 +30,7 @@ case $1 in
         rm -rf ${CONTEXT}/generated/openapi
 
         openapi-generator generate -g html2 \
-            -i ${CONTEXT}/swagger.yaml \
+            -i ${CONTEXT}/openapi.yaml \
             -o ${CONTEXT}/generated/openapi
 
         # Remove useless files
