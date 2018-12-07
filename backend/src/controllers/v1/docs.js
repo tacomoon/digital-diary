@@ -1,19 +1,18 @@
 'use strict'
 
-const fs = require('fs')
-const path = require('path')
 const express = require('express')
-const { NotFoundError } = require('../../errors')
+const swagger = require('swagger-ui-express')
+const yaml = require('yamljs')
 
 const router = new express.Router({})
 
-router.get('/', (req, res) => {
-  const filepath = path.join(process.cwd(), 'generated/openapi/index.html')
-  if (!fs.existsSync(filepath)) {
-    throw new NotFoundError("Docs was not generated")
-  } else {
-    res.sendFile(filepath)
-  }
-})
+router.use('/', swagger.serve)
+
+// TODO [EG]: handle error
+const doc = yaml.load("openapi.yaml")
+const options = {
+  customCss: '.swagger-ui .topbar { display: none }'
+}
+router.get('/', swagger.setup(doc, options))
 
 module.exports = router

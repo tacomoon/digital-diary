@@ -1,10 +1,8 @@
 openapi: "3.0.0"
 info:
   title: Digital Diary
-  description: Description
-  version: 0.0.3
-  license:
-    name: ISC
+  description: Digital Diary API which provide some methods to list classes and update marks
+  version: 0.0.5
 servers:
   - url: http://localhost:8080/api/v1
 tags:
@@ -75,7 +73,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ClassList'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Class'
 
   /marks/student/{student}:
     get:
@@ -103,7 +103,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MarkExtendedList'
+                type: array
+                items:
+                  $ref: '#/components/schemas/MarkExtended'
 
   /marks/teacher/{teacher}/class/{class}:
     get:
@@ -137,7 +139,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MarkExtendedList'
+                type: array
+                items:
+                  $ref: '#/components/schemas/MarkExtended'
 
   /marks/:
     post:
@@ -212,13 +216,6 @@ components:
         name:
           type: string
           example: 10 A
-      required:
-        - id
-        - name
-    ClassList:
-      type: array
-      items:
-        $ref: '#/components/schemas/Class'
     ClassExtended:
       type: object
       properties:
@@ -232,10 +229,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Student'
-      required:
-        - id
-        - name
-        - students
     Student:
       type: object
       properties:
@@ -251,11 +244,6 @@ components:
         phone:
           type: string
           example: +1-987-654-321
-      required:
-        - id
-        - name
-        - address
-        - phone
     Mark:
       type: object
       properties:
@@ -300,13 +288,3 @@ components:
         value:
           type: integer
           example: 5
-      required:
-        - teacher
-        - student
-        - subject
-        - date
-        - value
-    MarkExtendedList:
-      type: array
-      items:
-        $ref: '#/components/schemas/MarkExtended'
