@@ -8,7 +8,7 @@ class AbstractError extends Error {
     this.message = message
     this.status = status
 
-    Error.captureStackTrace(this)
+    Error.captureStackTrace(this, this.constructor)
   }
 
   toString() {

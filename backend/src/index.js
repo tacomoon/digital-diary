@@ -5,7 +5,8 @@ const {
   sequelizeInitializer,
   seedInitializer,
   routesInitializer,
-  middlewareInitializer
+  middlewareInitializer,
+  errorHandlers,
 } = require('./initializers')
 
 const { port } = require('config').get('express')
@@ -18,9 +19,10 @@ async function main() {
     .then(() => seedInitializer())
     .then(() => middlewareInitializer(app))
     .then(() => routesInitializer(app))
+    .then(() => errorHandlers(app))
 
   app.listen(port, () => logger.info(`Sever started: http://localhost:${port}`))
-    .on('error', error => logger.error(`${error.name}: ${error.message}\n${error.stack}`))
+    .on('error', error => logger.error(error.stack))
 }
 
 // To see more information from errors in async promises
