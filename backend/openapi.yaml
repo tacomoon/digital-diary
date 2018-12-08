@@ -2,7 +2,7 @@ openapi: "3.0.0"
 info:
   title: Digital Diary
   description: Digital Diary API which provide some methods to list classes and update marks
-  version: 0.0.5
+  version: 0.0.6
 servers:
   - url: http://localhost:8080/api/v1
 tags:
@@ -32,6 +32,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ClassExtended'
+        '400':
+          description: Bad request
+        '500':
+          description: Server side error
 
   /classes/student/{student}:
     get:
@@ -53,6 +57,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ClassExtended'
+        '400':
+          description: Bad request
+        '500':
+          description: Server side error
 
   /classes/teacher/{teacher}:
     get:
@@ -76,6 +84,10 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Class'
+        '400':
+          description: Bad request
+        '500':
+          description: Server side error
 
   /marks/student/{student}:
     get:
@@ -106,6 +118,10 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/MarkExtended'
+        '400':
+          description: Bad request
+        '500':
+          description: Server side error
 
   /marks/teacher/{teacher}/class/{class}:
     get:
@@ -142,6 +158,10 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/MarkExtended'
+        '400':
+          description: Bad request
+        '500':
+          description: Server side error
 
   /marks/:
     post:
@@ -160,7 +180,7 @@ paths:
                   type: integer
                 student:
                   type: integer
-                subejct:
+                subject:
                   type: integer
                 value:
                   type: integer
@@ -171,7 +191,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Mark'
-
+        '400':
+          description: Bad request
+        '500':
+          description: Server side error
 
   /marks/{mark}:
     put:
@@ -204,6 +227,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Mark'
+        '400':
+          description: Bad request
+        '500':
+          description: Server side error
 
 components:
   schemas:

@@ -4,18 +4,24 @@ const moment = require('moment')
 const express = require('express')
 const { Op } = require('sequelize')
 
+const { BadRequestError } = require('../../errors')
 const { mapMarkCore, mapMarkExtended } = require('../../utils/entity-mappers')
 const { Marks, Subjects, Students, Teachers, Users } = require('../../models')
 
 const router = new express.Router({})
 
 router.get('/student/:id', (req, res, next) => {
+  const studentId = req.params.id
+  if (!studentId) {
+    throw new BadRequestError('Request parameter \'student id\' is required')
+  }
+
   const fromDate = moment(req.query.from || Date.now()).isoWeekday(1).toDate()
 
   Marks
     .findAll({
       where: {
-        student_id: req.params.id,
+        student_id: studentId,
         date: {
           [Op.gte]: fromDate
         }
@@ -39,11 +45,20 @@ router.get('/student/:id', (req, res, next) => {
 router.get('/teacher/:teacher_id/class/:class_id', (req, res, next) => {
   const fromDate = moment(req.query.from || Date.now()).isoWeekday(1).toDate()
 
+  const teacherId = req.params.teacher_id
+  if (!teacherId) {
+    throw new BadRequestError('Request parameter \'teacher id\' is required')
+  }
+  const classId = req.params.teacher_id
+  if (!classId) {
+    throw new BadRequestError('Request parameter \'class id\' is required')
+  }
+
   Students
-    .findAll({ where: { class_id: req.params.class_id } })
+    .findAll({ where: { class_id: classId } })
     .then(students => Marks.findAll({
       where: {
-        teacher_id: req.params.teacher_id,
+        teacher_id: teacherId,
         student_id: {
           [Op.in]: students.map(it => it.id)
         },
@@ -67,13 +82,30 @@ router.get('/teacher/:teacher_id/class/:class_id', (req, res, next) => {
     .catch(err => next(err))
 })
 
-router.post('/', ({ body }, res, next) => {
+router.post('/', (req, res, next) => {
+  const teacherId = req.body.teacher
+  if (!teacherId) {
+    throw new BadRequestError('Body parameter \'teacher id\' is required')
+  }
+  const studentId = req.body.student
+  if (!studentId) {
+    throw new BadRequestError('Body parameter \'student id\' is required')
+  }
+  const subjectId = req.body.subject
+  if (!subjectId) {
+    throw new BadRequestError('Body parameter \'subject id\' is required')
+  }
+  const value = req.body.value
+  if (!value) {
+    throw new BadRequestError('Body parameter \'value\' is required')
+  }
+
   Marks
     .create({
-      teacher_id: body.teacher,
-      student_id: body.student,
-      subject_id: body.subject,
-      value: body.value,
+      teacher_id: teacherId,
+      student_id: studentId,
+      subject_id: subjectId,
+      value: value,
     })
     .then(mark => {
       res.json(mapMarkCore(mark))
@@ -82,13 +114,22 @@ router.post('/', ({ body }, res, next) => {
 })
 
 router.put('/:id', (req, res, next) => {
+  const teacherId = req.params.teacher_id
+  if (!teacherId) {
+    throw new BadRequestError('Request parameter \'teacher id\' is required')
+  }
+  const value = req.body.value
+  if (!value) {
+    throw new BadRequestError('Body parameter \'value\' is required')
+  }
+
   Marks
     .update({
         date: Date.now(),
-        value: req.body.value,
+        value: value,
       },
       {
-        where: { id: req.params.id },
+        where: { id: teacherId },
         returning: true,
       },
     )

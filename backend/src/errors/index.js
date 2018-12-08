@@ -1,9 +1,9 @@
 'use strict'
 
-const AbstractError = require('./abstract-error')
 const NotFoundError = require('./not-found-error')
+const BadRequestError = require('./bad-request-error')
 
 module.exports = {
-  AbstractError,
-  NotFoundError
+  NotFoundError,
+  BadRequestError
 }
