@@ -13,21 +13,26 @@ const { console: logger } = require('./utils/logger')
 
 const { port } = config.get('express')
 
-const main = async () => {
+function handleError(error) {
+  logger.error(`${error.name}: ${error.message}\n${error.stack}`)
+}
+
+async function main() {
   const application = express()
 
   await sequelizeInitializer()
-  await seedInitializer()
-  await middlewareInitializer(application)
-  await routesInitializer(application)
+    .then(() => seedInitializer())
+    .then(() => middlewareInitializer(application))
+    .then(() => routesInitializer(application))
 
   application
     .listen(port, () => logger.info(`Sever started: http://localhost:${port}`))
-    .on('error', err => logger.error(err))
+    .on('error', handleError)
 }
 
 main()
-  .catch(reason => {
-    logger.error(`Failed to start server on port ${port}: ${reason}`)
+  .catch(error => {
+    handleError(error)
+    logger.error(`Failed to start server on port ${port}`)
     process.exit(1)
   })
