@@ -8,31 +8,27 @@ const {
   middlewareInitializer
 } = require('./initializers')
 
-const config = require('config')
+const { port } = require('config').get('express')
 const { console: logger } = require('./utils/loggers')
 
-const { port } = config.get('express')
-
-function handleError(error) {
-  logger.error(`${error.name}: ${error.message}\n${error.stack}`)
-}
-
 async function main() {
-  const application = express()
+  const app = express()
 
   await sequelizeInitializer()
     .then(() => seedInitializer())
-    .then(() => middlewareInitializer(application))
-    .then(() => routesInitializer(application))
+    .then(() => middlewareInitializer(app))
+    .then(() => routesInitializer(app))
 
-  application
-    .listen(port, () => logger.info(`Sever started: http://localhost:${port}`))
-    .on('error', handleError)
+  app.listen(port, () => logger.info(`Sever started: http://localhost:${port}`))
+    .on('error', error => logger.error(`${error.name}: ${error.message}\n${error.stack}`))
 }
+
+// To see more information from errors in async promises
+// To enable tracing use 'export BLUEBIRD_LONG_STACK_TRACES=1'
+global.Promise = require('bluebird')
 
 main()
   .catch(error => {
-    handleError(error)
-    logger.error(`Failed to start server on port ${port}`)
+    logger.error(`Failed to start server on port ${port}, reason:\n${error.stack}`)
     process.exit(1)
   })
