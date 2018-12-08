@@ -25,7 +25,7 @@ async function main() {
     .on('error', error => logger.error(error.stack))
 }
 
-// To see more information from errors in async promises
+// Uses to see more information from errors in async promises
 // To enable tracing use 'export BLUEBIRD_LONG_STACK_TRACES=1'
 global.Promise = require('bluebird')
 

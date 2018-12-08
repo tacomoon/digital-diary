@@ -1,22 +1,27 @@
 'use strict'
 
+const errorHandler = require('errorhandler')
 const { console: logger } = require('./loggers')
 const { INTERNAL_SERVER_ERROR } = require('http-status')
 
 const env = process.env.NODE_ENV || 'development'
 
-function errorLogger(err, { headers, method, url, body }, res, next) {
+function logError(err, { headers, method, url, body }, res, next) {
   logger.error(`Failed to handle ${method} request to ${url}\nHeader: %j\nBody: %j\n${err.stack}`, headers, body)
   next(err)
 }
 
-function errorHandler(err, req, res, next) {
-  // TODO [EG]: depends on env
-  res.send('Oops, internal error')
+function handleError(err, req, res, next) {
+  res.status(err.status || INTERNAL_SERVER_ERROR)
 
+  if (env === 'development') {
+    errorHandler({ log: false })(err, req, res, next)
+  } else {
+    res.send(err.message)
+  }
 }
 
 module.exports = {
-  errorLogger,
-  errorHandler,
+  logError,
+  handleError,
 }

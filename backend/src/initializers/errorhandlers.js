@@ -1,13 +1,13 @@
 'use strict'
 
 const { console: logger } = require('../utils/loggers')
-const { errorLogger, errorHandler } = require('../utils/middleware')
+const { logError, handleError } = require('../utils/middleware')
 
 module.exports = (app) => {
   logger.info('Error handler initialization started')
 
-  app.use(errorLogger)
-  app.use(errorHandler)
+  app.use(logError)
+  app.use(handleError)
 
   logger.info('Error handler initialization done')
 }
