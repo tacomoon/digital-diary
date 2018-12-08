@@ -10,19 +10,19 @@ const router = new express.Router({})
 router.get('/:id', async (req, res, next) => {
   const classId = req.params.id
 
-  const clazz = await Classes.findByPk(classId)
-    .catch(error => next(error))
-  if (!clazz) {
-    next(new NotFoundError(`Class with id ${classId} not found`))
-    return
-  }
+  Classes.findByPk(classId)
+    .then(clazz => new Promise((resolve, reject) => {
+      if (!clazz) throw new NotFoundError(`Class with id: ${classId} not found`)
 
-  Students
-    .findAll({
-      where: { class_id: classId },
-      include: [{ model: Users }]
-    })
-    .then(students => res.json(mapClassExtended(clazz, students)))
+      Students
+        .findAll({
+          where: { class_id: classId },
+          include: [{ model: Users }]
+        })
+        .then(students => resolve({ clazz, students }))
+        .catch(err => reject(err))
+    }))
+    .then(({ clazz, students }) => res.json(mapClassExtended({ id: 12, name: 'example' }, students)))
     .catch(err => next(err))
 })
 
