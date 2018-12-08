@@ -2,7 +2,7 @@
 
 const config = require('config')
 const { exec } = require('child_process')
-const { console: logger } = require('./logger')
+const { console: logger } = require('./loggers')
 
 const dialect = config.get('database.config.dialect')
 const username = config.get('database.config.username')

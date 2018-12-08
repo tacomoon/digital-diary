@@ -4,20 +4,28 @@ PORT=5432
 IMAGE_NAME='digital-diary-database'
 VOLUME_NAME='digital-diary-postgres-data'
 
-function find_running_container {
+function check_container_exists() {
+    if [[ -z $(docker images ${IMAGE_NAME} -q) ]]; then
+        echo "Unable to find image '$IMAGE_NAME'" >&2
+        exit 1
+    fi
+}
+
+function find_running_container() {
     CONTAINER_ID=$(docker ps -q -f=ancestor=${IMAGE_NAME}:latest)
 }
 
-function check_container_running {
+function check_container_running() {
+    check_container_exists
     find_running_container
 
     if [[ -z ${CONTAINER_ID} ]]; then
         echo "Unable to find running image '$IMAGE_NAME:latest'" >&2
-        return 1
+        exit 1
     fi
 }
 
-function stop_running_container {
+function stop_running_container() {
     find_running_container
 
     if [[ ${CONTAINER_ID} ]]; then
@@ -30,13 +38,14 @@ case $1 in
 
     b | build )
         VERSION=$(date +'%s')
-        DOCKER_CONTEXT=$(dirname $0)/../database
+        CONTEXT=$(dirname $0)/../database
 
-        docker build -t ${IMAGE_NAME}:${VERSION} -f ${DOCKER_CONTEXT}/Dockerfile ${DOCKER_CONTEXT}
+        docker build -t ${IMAGE_NAME}:${VERSION} -f ${CONTEXT}/Dockerfile ${CONTEXT}
         docker tag ${IMAGE_NAME}:${VERSION} ${IMAGE_NAME}:latest
         ;;
 
     r | run )
+        check_container_exists
         stop_running_container
 
         echo "Running '$IMAGE_NAME:latest' image with volume '$VOLUME_NAME' on port $PORT"
@@ -64,7 +73,7 @@ case $1 in
         ;;
 
     * )
-        if [[ ${1} ]]; then echo "Unknown command: $1\n"; fi
+        if [[ ${1} ]]; then echo -e "Unknown command: $1\n"; fi
 
         echo -e "Commands:"
         echo -e "  b, build\tBuild '$IMAGE_NAME' image and tag as latest"

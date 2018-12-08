@@ -1,0 +1,317 @@
+openapi: "3.0.0"
+info:
+  title: Digital Diary
+  description: Digital Diary API which provide some methods to list classes and update marks
+  version: 0.0.6
+servers:
+  - url: http://localhost:8080/api/v1
+tags:
+  - name: Classes
+    description: class operations
+  - name: Marks
+    description: marks operations
+
+paths:
+  /classes/{class}:
+    get:
+      tags:
+        - Classes
+      summary: Find class by ID
+      operationId: getClassById
+      parameters:
+        - name: class
+          in: path
+          description: ID of class to get
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassExtended'
+        '400':
+          description: Bad request
+        '500':
+          description: Server side error
+
+  /classes/student/{student}:
+    get:
+      tags:
+        - Classes
+      summary: Find class by Student ID
+      operationId: getClassByStudentId
+      parameters:
+        - name: student
+          in: path
+          description: ID of student from class to get
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassExtended'
+        '400':
+          description: Bad request
+        '500':
+          description: Server side error
+
+  /classes/teacher/{teacher}:
+    get:
+      tags:
+        - Classes
+      summary: List classes by Teacher ID
+      operationId: getClassesByTeacherId
+      parameters:
+        - name: teacher
+          in: path
+          description: ID of teacher for which to get classes
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Class'
+        '400':
+          description: Bad request
+        '500':
+          description: Server side error
+
+  /marks/student/{student}:
+    get:
+      tags:
+        - Marks
+      summary: List weekly marks by Student ID
+      operationId: listMarksByStudentId
+      parameters:
+        - name: student
+          in: path
+          description: ID of student for which to get marks
+          required: true
+          schema:
+            type: integer
+        - name: from
+          in: query
+          description: Date (yyyy-MM-dd) from week for which get marks (current date by default)
+          required: false
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MarkExtended'
+        '400':
+          description: Bad request
+        '500':
+          description: Server side error
+
+  /marks/teacher/{teacher}/class/{class}:
+    get:
+      tags:
+        - Marks
+      summary: List weekly marks by Teacher ID and Class ID
+      operationId: listMarksByTeacherIdAndClassId
+      parameters:
+        - name: teacher
+          in: path
+          description: ID of teacher for which to get marks
+          required: true
+          schema:
+            type: integer
+        - name: class
+          in: path
+          description: ID of class from which to get marks
+          required: true
+          schema:
+            type: integer
+        - name: from
+          in: query
+          description: Date (yyyy-MM-dd) from week for which get marks (current date by default)
+          required: false
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MarkExtended'
+        '400':
+          description: Bad request
+        '500':
+          description: Server side error
+
+  /marks/:
+    post:
+      tags:
+        - Marks
+      summary: Create mark with current date
+      operationId: createMark
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                teacher:
+                  type: integer
+                student:
+                  type: integer
+                subject:
+                  type: integer
+                value:
+                  type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mark'
+        '400':
+          description: Bad request
+        '500':
+          description: Server side error
+
+  /marks/{mark}:
+    put:
+      tags:
+        - Marks
+      summary: Update mark value and date to current
+      operationId: updateMark
+      parameters:
+        - name: mark
+          in: path
+          description: ID of mark to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                mark:
+                  type: integer
+                value:
+                  type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mark'
+        '400':
+          description: Bad request
+        '500':
+          description: Server side error
+
+components:
+  schemas:
+    Class:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 2
+        name:
+          type: string
+          example: 10 A
+    ClassExtended:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: 4 C
+        students:
+          type: array
+          items:
+            $ref: '#/components/schemas/Student'
+    Student:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 51
+        name:
+          type: string
+          example: Anakin Skywalker
+        address:
+          type: string
+          example: Slace village, Tatooine
+        phone:
+          type: string
+          example: +1-987-654-321
+    Mark:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 12
+        teacher:
+          type: integer
+          example: 3
+        student:
+          type: integer
+          example: 5
+        subject:
+          type: integer
+          example: 1
+        date:
+          type: string
+          format: date
+          example: 2018-06-25
+        value:
+          type: integer
+          example: 3
+    MarkExtended:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 67
+        teacher:
+          type: string
+          example: Qui-Gon Jinn
+        student:
+          type: string
+          example: Anakin Skywalker
+        subejct:
+          type: string
+          example: Racing
+        date:
+          type: string
+          format: date
+          example: 0032-05-12
+        value:
+          type: integer
+          example: 5

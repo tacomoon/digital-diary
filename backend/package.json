@@ -1,15 +1,13 @@
 {
   "name": "digital-diary",
-  "version": "0.0.1",
+  "version": "0.0.5",
   "description": "AMM JS School 2018",
   "main": "src/index.js",
   "scripts": {
+    "dev": "nodemon src/index.js",
     "start": "node src/index.js",
-    "migrate-status": "../scripts/migrations.sh status",
-    "migrate-up": "../scripts/migrations.sh up",
-    "migrate-down": "../scripts/migrations.sh  down",
-    "migrate-down-all": "../scripts/migrations.sh  down-all",
-    "database": "../scripts/database.sh run"
+    "openapi": "../scripts/openapi generate",
+    "database": "../scripts/database run && ../scripts/migrate up"
   },
   "repository": {
     "type": "git",
@@ -22,15 +20,19 @@
   },
   "homepage": "https://github.com/tacomoon/digital-diary#readme",
   "dependencies": {
+    "bluebird": "^3.5.3",
     "body-parser": "^1.18.2",
     "chance": "^1.0.13",
     "config": "^1.30.0",
     "errorhandler": "^1.5.0",
     "express": "^4.16.3",
     "http-status": "^1.1.0",
+    "moment": "^2.22.2",
     "pg": "^7.6.1",
     "pg-hstore": "^2.3.2",
     "sequelize": "^4.41.2",
-    "winston": "^3.1.0"
+    "swagger-ui-express": "^4.0.1",
+    "winston": "^3.1.0",
+    "yamljs": "^0.3.0"
   }
 }

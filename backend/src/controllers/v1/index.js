@@ -1,7 +1,11 @@
 'use strict'
 
-const subjects = require('./subjects')
+const classes = require('./classes')
+const marks = require('./marks')
+const docs = require('./docs')
 
 module.exports = {
-  subjects
+  classes,
+  marks,
+  docs,
 }

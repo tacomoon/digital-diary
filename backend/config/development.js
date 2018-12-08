@@ -2,15 +2,26 @@
 
 const { raw } = require('config/raw')
 const { format, transports } = require('winston')
-const { combine, simple, timestamp, colorize, printf } = format
+const { combine, simple, splat, timestamp, printf } = format
 
+const colorizer = format.colorize()
 const timestampFormat = timestamp({ format: 'YYYY-MM-DD HH:mm:ss' })
-const messageFormat = printf(({ message, timestamp, level }) => `${timestamp} ${level}: ${message}`)
+const messageFormat = printf(({ message, timestamp, level }) => {
+  switch (level) {
+    case 'error':
+      return colorizer.colorize(level, `${timestamp} ${level}: ${message}`)
+    default:
+      return `${timestamp} ` + colorizer.colorize(level, `${level}: `) + message
+
+  }
+})
 
 module.exports = {
   express: {
     port: process.env.DIGITAL_DIARY_PORT || 8080,
-    limit: '10mb'
+    body: {
+      limit: '10mb'
+    }
   },
   api: {
     base: 'api',
@@ -38,7 +49,7 @@ module.exports = {
   logger: {
     console: raw({
       level: 'info',
-      format: combine(simple(), colorize(), timestampFormat, messageFormat),
+      format: combine(simple(), splat(), timestampFormat, messageFormat),
       transports: [
         new transports.Console()
       ]
