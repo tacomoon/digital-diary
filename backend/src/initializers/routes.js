@@ -3,7 +3,7 @@
 const controllers = require('../controllers/v1')
 
 const config = require('config')
-const { console: logger } = require('../utils/logger')
+const { console: logger } = require('../utils/loggers')
 const { base, version } = config.get('api')
 
 module.exports = (app) => {

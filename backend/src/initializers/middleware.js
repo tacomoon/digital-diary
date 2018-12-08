@@ -3,7 +3,7 @@
 const config = require('config')
 const bodyParser = require('body-parser')
 
-const { console: logger } = require('../utils/logger')
+const { console: logger } = require('../utils/loggers')
 const { errorLogger, errorHandler } = require('../utils/middleware')
 
 module.exports = (application) => {

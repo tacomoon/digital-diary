@@ -9,7 +9,7 @@ const {
 } = require('./initializers')
 
 const config = require('config')
-const { console: logger } = require('./utils/logger')
+const { console: logger } = require('./utils/loggers')
 
 const { port } = config.get('express')
 

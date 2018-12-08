@@ -5,7 +5,7 @@ const { Users, Teachers, Students, Subjects, Classes, Marks } = require('../mode
 
 const config = require('config')
 const sequelize = require('../utils/sequelize')
-const { console: logger } = require('../utils/logger')
+const { console: logger } = require('../utils/loggers')
 
 const chance = new Chance()
 const { subjectNames, teacherCount, studentCount, classCount, markCount } = config.get('database.seed')
