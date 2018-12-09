@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+
+PORT=3000
+IMAGE_NAME="digital-diary-backend"
+
+function find_running_container() {
+    CONTAINER_ID=$(docker ps --quiet --filter ancestor=${IMAGE_NAME}:latest)
+}
+
+function check_container_running() {
+    find_running_container
+
+    if [[ -z ${CONTAINER_ID} ]]; then
+        echo "Unable to find running '$IMAGE_NAME:latest' container"
+        exit 1
+    fi
+}
+
+function check_image_exists() {
+    IMAGE_ID=$(docker images --quiet ${IMAGE_NAME}:latest)
+    if [[ -z ${IMAGE_ID} ]]; then
+        echo "Unable to find image '$IMAGE_NAME:latest' container"
+        exit 1
+    fi
+}
+
+function stop_running_container() {
+    find_running_container
+
+    if [[ ${CONTAINER_ID}  ]]; then
+        echo "Stopping running '$IMAGE_NAME' container $CONTAINER_ID"
+        docker stop ${CONTAINER_ID}
+    fi
+}
+
+case ${1} in
+    b | build )
+        VERSION="$(date +'%s')"
+        CONTEXT=$(dirname $0)/../backend
+
+        echo "Building '$IMAGE_NAME' image"
+        docker build --tag ${IMAGE_NAME}:${VERSION} --file ${CONTEXT}/Dockerfile ${CONTEXT}
+        docker tag ${IMAGE_NAME}:${VERSION} ${IMAGE_NAME}:latest
+        ;;
+
+    r | run )
+        check_image_exists
+        stop_running_container
+
+        echo "Running latest '$IMAGE_NAME' latest image on port $PORT"
+        docker run --detach --publish ${PORT}:3000 -e "NODE_ENV=production" ${IMAGE_NAME}:latest
+        ;;
+
+    c | connect )
+        check_container_running
+
+        echo "Connecting to '$IMAGE_NAME' container $CONTAINER_ID"
+        docker exec -it ${CONTAINER_ID} bash
+        ;;
+
+    s | stop )
+        check_container_running
+        stop_running_container
+        ;;
+
+    * )
+        if [[ $1  ]]; then echo -e "Unknown command: $1\n"; fi
+
+        echo -e "Commands:"
+        echo -e "  b, build\tBuild '$IMAGE_NAME' image and tag as latest"
+        echo -e "  r, run\tRun latest '$IMAGE_NAME' image on port $PORT"
+        echo -e "  c, connect\tConnect to running '$IMAGE_NAME' container"
+        echo -e "  s, stop\tStop running '$IMAGE_NAME' container"
+esac

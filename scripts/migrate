@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 CONTEXT="$(dirname "$0")/../backend"
+MIGRATIONS_PATH="../backend/src/migrations"
 
 function print_help() {
     echo -e "Commands:"
@@ -15,22 +16,22 @@ function print_help() {
 cd ${CONTEXT}
 case $1 in
     status )
-        node src/utils/migrations db:migrate:status
+        sequelize db:migrate:status --migrations-path ${MIGRATIONS_PATH}
         ;;
     up )
-        node src/utils/migrations db:migrate
+        sequelize db:migrate --migrations-path ${MIGRATIONS_PATH}
         ;;
     down )
         shift
 
         if [[ -z $1 ]]; then
-            node src/utils/migrations db:migrate:undo
+            sequelize db:migrate:undo --migrations-path ${MIGRATIONS_PATH}
             exit 0
         fi
 
         case $1 in
             -a | --all )
-                node src/utils/migrations db:migrate:undo:all
+                sequelize db:migrate:undo:all --migrations-path ${MIGRATIONS_PATH}
                 exit 0
                 ;;
             -n | --number )

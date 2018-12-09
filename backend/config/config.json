@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "mysecretpassword",
+    "database": "digital_diary",
+    "host": "localhost",
+    "port": "5432",
+    "dialect": "postgres",
+    "operatorsAliases": false
+  },
+  "production": {
+    "username": "qreyxdjlzpbmsz",
+    "password": "8af3c09fa84f163ced779d88d69150ca7c3ca7cc3dfa74192da887844124bd1e",
+    "database": "d32g2k7n49rlo2",
+    "host": "ec2-54-246-85-234.eu-west-1.compute.amazonaws.com",
+    "port": "5432",
+    "dialect": "postgres",
+    "dialectOptions": {
+      "ssl": true
+    },
+    "operatorsAliases": false
+  }
+}

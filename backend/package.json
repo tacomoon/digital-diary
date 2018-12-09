@@ -5,8 +5,6 @@
   "main": "src/index.js",
   "scripts": {
     "dev": "nodemon src/index.js",
-    "start": "node src/index.js",
-    "openapi": "../scripts/openapi generate",
     "database": "../scripts/database run && ../scripts/migrate up"
   },
   "repository": {
