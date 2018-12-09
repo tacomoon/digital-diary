@@ -8,7 +8,7 @@ module.exports = {
   api: base.api,
   database: {
     seed: base.database.seed,
-    config: { ...sequelize.development }
+    config: { ...sequelize.production }
   },
   logger: base.logger,
 }
