@@ -18,7 +18,7 @@ const messageFormat = printf(({ message, timestamp, level }) => {
 
 module.exports = {
   express: {
-    port: process.env.DIGITAL_DIARY_PORT || 3000,
+    port: process.env.PORT || 3000,
     body: {
       limit: '10mb'
     }
